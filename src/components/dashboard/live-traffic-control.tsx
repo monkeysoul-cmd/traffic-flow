@@ -83,7 +83,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
 
   return (
     <div className="flex items-center justify-end space-x-2">
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 mr-2">
             <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                 <button
                 onClick={() => setLightState('red')}
