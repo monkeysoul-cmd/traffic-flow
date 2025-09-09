@@ -51,7 +51,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
   }
 
   return (
-    <div className="flex items-center justify-end space-x-4">
+    <div className="flex items-center justify-end space-x-2">
         <div className="flex flex-col items-center gap-2">
             <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                 <button
@@ -133,7 +133,7 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
           {(isFullScreen ? incidents : incidents.slice(0, 3)).map((incident) => (
             <TableRow key={incident.id}>
               <TableCell className="font-medium pl-4">{incident.location}</TableCell>
-              <TableCell>{incident.type}</TableCell>
+              <TableCell className="text-xs">{incident.type}</TableCell>
               <TableCell className="text-right pr-4">
                 <TrafficLightController incidentId={incident.id} />
               </TableCell>
@@ -152,11 +152,9 @@ export default function LiveTrafficControl({ incidents }: { incidents: Incident[
         <LiveTrafficControlContent incidents={incidents} />
       </Card>
       <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
-        <div className="flex-grow overflow-auto">
-            <ScrollArea className="h-full">
-                <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
-            </ScrollArea>
-        </div>
+        <ScrollArea className="h-full w-full">
+            <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
