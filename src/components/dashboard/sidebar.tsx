@@ -14,8 +14,6 @@ import {
 import {
   LayoutDashboard,
   Camera,
-  BrainCircuit,
-  AlertTriangle,
   CarFront,
   LogOut,
 } from 'lucide-react';
@@ -23,8 +21,6 @@ import {
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/analysis', label: 'Real-Time Analysis', icon: Camera },
-  { href: '/dashboard/incidents', label: 'Incident Detection', icon: AlertTriangle },
-  { href: '/dashboard/predictions', label: 'Congestion Prediction', icon: BrainCircuit },
 ];
 
 export default function DashboardSidebar() {
