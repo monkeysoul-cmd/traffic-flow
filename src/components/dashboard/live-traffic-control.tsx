@@ -21,131 +21,153 @@ interface Incident {
 
 type LightState = 'red' | 'yellow' | 'green';
 
-const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
-  const [lightState, setLightState] = useState<LightState>('red');
-  const [duration, setDuration] = useState(30);
-  const [remaining, setRemaining] = useState(30);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+interface ControllerState {
+    lightState: LightState;
+    duration: number;
+    remaining: number;
+    isRunning: boolean;
+}
 
-  useEffect(() => {
-    if (isRunning && remaining > 0) {
-      timerRef.current = setTimeout(() => {
-        setRemaining(prev => prev - 1);
-      }, 1000);
-    } else if (remaining === 0 || !isRunning) {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
+const TrafficLightController = ({
+    incidentId,
+    controllerState,
+    onStateChange,
+}: {
+    incidentId: string;
+    controllerState: ControllerState;
+    onStateChange: (state: Partial<ControllerState>) => void;
+}) => {
+    const { lightState, duration, remaining, isRunning } = controllerState;
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        if (isRunning && remaining > 0) {
+            timerRef.current = setTimeout(() => {
+                onStateChange({ remaining: remaining - 1 });
+            }, 1000);
+        } else if (remaining === 0 && isRunning) {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+            onStateChange({ isRunning: false });
         }
-        setIsRunning(false);
+        return () => {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+        };
+    }, [remaining, isRunning, onStateChange]);
+
+    const handleStart = () => {
+        if (!isRunning) {
+            let newRemaining = remaining;
+            if (remaining === 0) {
+                newRemaining = duration;
+            }
+            onStateChange({ isRunning: true, remaining: newRemaining });
+        }
     }
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+
+    const handleReset = () => {
+        onStateChange({ isRunning: false, remaining: duration });
     };
-  }, [remaining, isRunning]);
 
-  const handleStart = () => {
-    if (!isRunning) {
-        if (remaining === 0) {
-            setRemaining(duration);
+    const handleAdd10s = () => {
+        if (isRunning) {
+            onStateChange({ remaining: remaining + 10 });
+        } else {
+            const newDuration = duration + 10;
+            onStateChange({ duration: newDuration, remaining: newDuration });
         }
-        setIsRunning(true);
+    };
+
+    const handleSubtract5s = () => {
+        if (isRunning) {
+            onStateChange({ remaining: Math.max(0, remaining - 5) });
+        } else {
+            const newDuration = Math.max(0, duration - 5);
+            onStateChange({ duration: newDuration, remaining: newDuration });
+        }
     }
-  }
 
-  const handleReset = () => {
-    setIsRunning(false);
-    setRemaining(duration);
-  };
-
-  const handleAdd10s = () => {
-    if (isRunning) {
-        setRemaining(prev => prev + 10);
-    } else {
-        const newDuration = duration + 10;
-        setDuration(newDuration);
-        setRemaining(newDuration);
+    const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDuration = parseInt(e.target.value, 10) || 0;
+        if (!isRunning) {
+            onStateChange({ duration: newDuration, remaining: newDuration });
+        } else {
+            onStateChange({ duration: newDuration });
+        }
     }
-  };
 
-  const handleSubtract5s = () => {
-    if(isRunning) {
-        setRemaining(prev => Math.max(0, prev - 5));
-    } else {
-        const newDuration = Math.max(0, duration - 5);
-        setDuration(newDuration);
-        setRemaining(newDuration);
-    }
-  }
-
-
-  return (
-    <div className="flex items-center justify-end space-x-2">
-        <div className="flex flex-col items-center gap-2 mr-2">
-            <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
-                <button
-                onClick={() => setLightState('red')}
-                className={cn(
-                    'w-6 h-6 rounded-full transition-all',
-                    lightState === 'red' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-gray-600'
-                )}
-                />
-                <button
-                onClick={() => setLightState('yellow')}
-                className={cn(
-                    'w-6 h-6 rounded-full transition-all',
-                    lightState === 'yellow' ? 'bg-yellow-500 shadow-[0_0_10px_#f59e0b]' : 'bg-gray-600'
-                )}
-                />
-                <button
-                onClick={() => setLightState('green')}
-                className={cn(
-                    'w-6 h-6 rounded-full transition-all',
-                    lightState === 'green' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-gray-600'
-                )}
-                />
+    return (
+        <div className="flex items-center justify-end space-x-2">
+            <div className="flex flex-col items-center gap-2 mr-2">
+                <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
+                    <button
+                        onClick={() => onStateChange({ lightState: 'red' })}
+                        className={cn(
+                            'w-6 h-6 rounded-full transition-all',
+                            lightState === 'red' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-gray-600'
+                        )}
+                    />
+                    <button
+                        onClick={() => onStateChange({ lightState: 'yellow' })}
+                        className={cn(
+                            'w-6 h-6 rounded-full transition-all',
+                            lightState === 'yellow' ? 'bg-yellow-500 shadow-[0_0_10px_#f59e0b]' : 'bg-gray-600'
+                        )}
+                    />
+                    <button
+                        onClick={() => onStateChange({ lightState: 'green' })}
+                        className={cn(
+                            'w-6 h-6 rounded-full transition-all',
+                            lightState === 'green' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-gray-600'
+                        )}
+                    />
+                </div>
+                <span className="text-xs text-muted-foreground capitalize">{lightState}</span>
             </div>
-            <span className="text-xs text-muted-foreground capitalize">{lightState}</span>
+            <div className="flex flex-col items-center space-y-1">
+                <Input
+                    type="number"
+                    value={duration}
+                    onChange={handleDurationChange}
+                    className="w-12 h-7 text-center text-xs"
+                />
+                <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white">{isRunning ? 'Running' : 'Start'}</Button>
+            </div>
+            <div className="flex items-center space-x-1 min-w-[40px]">
+                <Timer className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-mono font-bold">{remaining}s</span>
+            </div>
+            <div className="flex flex-col space-y-1">
+                <Button size="icon" onClick={handleAdd10s} className="h-5 w-5 bg-sky-500 hover:bg-sky-600 text-white">
+                    <Plus className="w-3 h-3" />
+                </Button>
+                <Button size="icon" onClick={handleSubtract5s} className="h-5 w-5 bg-red-400 hover:bg-red-500 text-white">
+                    <Minus className="w-3 h-3" />
+                </Button>
+            </div>
+            <div className="flex flex-col justify-center">
+                <Button size="icon" onClick={handleReset} className="h-5 w-5 bg-green-500 hover:bg-green-600 text-white">
+                    <RotateCcw className="w-3 h-3" />
+                </Button>
+            </div>
         </div>
-        <div className="flex flex-col items-center space-y-1">
-            <Input 
-                type="number" 
-                value={duration}
-                onChange={(e) => {
-                    const newDuration = parseInt(e.target.value, 10) || 0;
-                    setDuration(newDuration);
-                    if (!isRunning) {
-                        setRemaining(newDuration);
-                    }
-                }}
-                className="w-12 h-7 text-center text-xs"
-            />
-            <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white">{isRunning ? 'Running' : 'Start'}</Button>
-        </div>
-         <div className="flex items-center space-x-1 min-w-[40px]">
-            <Timer className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-mono font-bold">{remaining}s</span>
-         </div>
-         <div className="flex flex-col space-y-1">
-            <Button size="icon" onClick={handleAdd10s} className="h-5 w-5 bg-sky-500 hover:bg-sky-600 text-white">
-                <Plus className="w-3 h-3" />
-            </Button>
-            <Button size="icon" onClick={handleSubtract5s} className="h-5 w-5 bg-red-400 hover:bg-red-500 text-white">
-                <Minus className="w-3 h-3" />
-            </Button>
-         </div>
-         <div className="flex flex-col justify-center">
-            <Button size="icon" onClick={handleReset} className="h-5 w-5 bg-green-500 hover:bg-green-600 text-white">
-                <RotateCcw className="w-3 h-3" />
-            </Button>
-         </div>
-    </div>
-  );
+    );
 };
 
-const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incidents: Incident[], isFullScreen?: boolean }) => (
+const LiveTrafficControlContent = ({
+  incidents,
+  controllerStates,
+  onControllerStateChange,
+  isFullScreen = false
+}: {
+  incidents: Incident[],
+  controllerStates: Record<string, ControllerState>,
+  onControllerStateChange: (incidentId: string, state: Partial<ControllerState>) => void,
+  isFullScreen?: boolean
+}) => (
   <>
     <CardHeader className="flex flex-row items-start justify-between p-4">
       <div>
@@ -164,9 +186,9 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
       )}
       {isFullScreen && (
         <DialogClose asChild>
-            <Button variant="ghost" size="icon">
-                <Minimize className="w-5 h-5" />
-            </Button>
+          <Button variant="ghost" size="icon">
+            <Minimize className="w-5 h-5" />
+          </Button>
         </DialogClose>
       )}
     </CardHeader>
@@ -185,7 +207,11 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
               <TableCell className="font-medium pl-4">{incident.location}</TableCell>
               <TableCell className="text-xs">{incident.type}</TableCell>
               <TableCell className="text-right pr-4">
-                <TrafficLightController incidentId={incident.id} />
+                <TrafficLightController
+                  incidentId={incident.id}
+                  controllerState={controllerStates[incident.id]}
+                  onStateChange={(newState) => onControllerStateChange(incident.id, newState)}
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -196,16 +222,44 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
 );
 
 export default function LiveTrafficControl({ incidents }: { incidents: Incident[] }) {
-  return (
-    <Dialog>
-      <Card>
-        <LiveTrafficControlContent incidents={incidents} />
-      </Card>
-      <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
-        <ScrollArea className="h-full w-full [&>div>div[style*='display:block;']]:!hidden">
-            <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
-  );
+    const [controllerStates, setControllerStates] = useState<Record<string, ControllerState>>(() =>
+        incidents.reduce((acc, incident) => {
+            acc[incident.id] = {
+                lightState: 'red',
+                duration: 30,
+                remaining: 30,
+                isRunning: false,
+            };
+            return acc;
+        }, {} as Record<string, ControllerState>)
+    );
+
+    const handleControllerStateChange = (incidentId: string, newState: Partial<ControllerState>) => {
+        setControllerStates(prev => ({
+            ...prev,
+            [incidentId]: { ...prev[incidentId], ...newState }
+        }));
+    };
+
+    return (
+        <Dialog>
+            <Card>
+                <LiveTrafficControlContent
+                    incidents={incidents}
+                    controllerStates={controllerStates}
+                    onControllerStateChange={handleControllerStateChange}
+                />
+            </Card>
+            <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
+                <ScrollArea className="h-full w-full [&>div>div[style*='display:block;']]:!hidden">
+                    <LiveTrafficControlContent
+                        incidents={incidents}
+                        controllerStates={controllerStates}
+                        onControllerStateChange={handleControllerStateChange}
+                        isFullScreen={true}
+                    />
+                </ScrollArea>
+            </DialogContent>
+        </Dialog>
+    );
 }
