@@ -28,7 +28,7 @@ export default function DashboardSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="p-4">
+      <SidebarHeader className="p-4 pb-8">
         <div className="flex items-center gap-2">
           <CarFront className="w-8 h-8 text-primary" />
           <span className="text-xl font-semibold">TrafficFlow</span>
