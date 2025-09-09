@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, BrainCircuit, MapPin, Lightbulb } from 'lucide-react';
+import { BrainCircuit, MapPin, Lightbulb } from 'lucide-react';
 import TrafficLightLoader from './traffic-light-loader';
 
 const defaultHistoricalData = JSON.stringify({
@@ -96,8 +96,7 @@ export default function PredictionsForm() {
             </div>
             
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BrainCircuit className="mr-2 h-4 w-4" />}
-              Predict Congestion
+              {isLoading ? <span className="text-sm animate-pulse">Predicting...</span> : <><BrainCircuit className="mr-2 h-4 w-4" />Predict Congestion</>}
             </Button>
           </form>
         </CardContent>

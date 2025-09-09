@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
 import { Progress } from "@/components/ui/progress"
 import { Badge } from '@/components/ui/badge';
@@ -100,8 +100,7 @@ export default function IncidentsForm() {
             </div>
             
             <Button type="submit" disabled={isLoading || !file} className="w-full">
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldAlert className="mr-2 h-4 w-4" />}
-              Detect Incident
+              {isLoading ? <span className="text-sm animate-pulse">Detecting...</span> : <><ShieldAlert className="mr-2 h-4 w-4" />Detect Incident</>}
             </Button>
           </form>
         </CardContent>

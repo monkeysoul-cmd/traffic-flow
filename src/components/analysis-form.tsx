@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import Image from 'next/image';
 import TrafficLightLoader from './traffic-light-loader';
 
@@ -100,8 +100,7 @@ export default function AnalysisForm() {
             </div>
             
             <Button type="submit" disabled={isLoading || !file} className="w-full">
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-              Analyze Traffic
+              {isLoading ? <span className="text-sm animate-pulse">Analyzing...</span> : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
             </Button>
           </form>
         </CardContent>
