@@ -4,6 +4,7 @@ import TrafficVolumeChart from "./traffic-volume-chart";
 import Image from 'next/image';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 const recentIncidents = [
   { id: "INC-001", location: "Main St & 1st Ave", type: "Accident", severity: "High", time: "10:45 AM" },
@@ -11,6 +12,16 @@ const recentIncidents = [
   { id: "INC-003", location: "Highway 5, Exit 23", type: "Congestion", severity: "Low", time: "10:15 AM" },
   { id: "INC-004", location: "Downtown Tunnel", type: "Accident", severity: "High", time: "9:50 AM" },
 ];
+
+const TrafficLight = ({ severity }: { severity: 'High' | 'Medium' | 'Low' }) => {
+  return (
+    <div className="flex space-x-1">
+      <div className={cn("w-3 h-3 rounded-full", severity === 'High' ? 'bg-red-500' : 'bg-gray-600')}></div>
+      <div className={cn("w-3 h-3 rounded-full", severity === 'Medium' ? 'bg-yellow-500' : 'bg-gray-600')}></div>
+      <div className={cn("w-3 h-3 rounded-full", severity === 'Low' ? 'bg-green-500' : 'bg-gray-600')}></div>
+    </div>
+  );
+};
 
 export default function Overview() {
   return (
@@ -97,6 +108,7 @@ export default function Overview() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Status</TableHead>
                 <TableHead>Incident ID</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Type</TableHead>
@@ -107,6 +119,9 @@ export default function Overview() {
             <TableBody>
               {recentIncidents.map((incident) => (
                 <TableRow key={incident.id}>
+                  <TableCell>
+                    <TrafficLight severity={incident.severity as 'High' | 'Medium' | 'Low'} />
+                  </TableCell>
                   <TableCell className="font-mono">{incident.id}</TableCell>
                   <TableCell>{incident.location}</TableCell>
                   <TableCell>{incident.type}</TableCell>
