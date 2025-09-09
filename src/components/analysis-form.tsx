@@ -100,7 +100,7 @@ export default function AnalysisForm() {
             </div>
             
             <Button type="submit" disabled={isLoading || !file} className="w-full">
-              {isLoading ? <span className="text-sm animate-pulse">Analyzing...</span> : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
+              {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
             </Button>
           </form>
         </CardContent>
