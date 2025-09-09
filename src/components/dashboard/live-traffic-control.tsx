@@ -143,7 +143,7 @@ const TrafficLightController = ({
                 <Timer className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-mono font-bold">{remaining}</span>
             </div>
-            <div className="flex flex-col space-y-1 p-1">
+            <div className="flex flex-col space-y-1.5 p-1">
                 <Button size="icon" onClick={handleAdd10s} className="h-5 w-5 bg-sky-500/50 hover:bg-sky-600/50 text-white">
                     <Plus className="w-3 h-3" />
                 </Button>
