@@ -122,7 +122,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                 }}
                 className="w-12 h-7 text-center text-xs"
             />
-            <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">{isRunning ? 'Running' : 'Start'}</Button>
+            <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white">{isRunning ? 'Running' : 'Start'}</Button>
         </div>
          <div className="flex items-center space-x-1 min-w-[40px]">
             <Timer className="w-4 h-4 text-muted-foreground" />
