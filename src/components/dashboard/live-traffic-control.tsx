@@ -61,7 +61,7 @@ const TrafficLightController = ({
     const handleStart = () => {
         if (!isRunning) {
             let newRemaining = remaining;
-            if (remaining === 0) {
+            if (remaining <= 0) {
                 newRemaining = duration;
             }
             onStateChange({ isRunning: true, remaining: newRemaining });
@@ -101,7 +101,7 @@ const TrafficLightController = ({
 
     return (
         <div className="flex items-center justify-end space-x-1">
-            <div className="flex flex-col items-center gap-2 mr-2">
+            <div className="flex flex-col items-center gap-2 mr-4">
                 <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                     <button
                         onClick={() => onStateChange({ lightState: 'red' })}
@@ -135,11 +135,11 @@ const TrafficLightController = ({
                         onChange={handleDurationChange}
                         className="w-full h-7 text-center text-sm pr-4"
                     />
-                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm font-mono text-muted-foreground">s</span>
+                    <span className="absolute right-1 top-1/2 -translate-y-1/2 text-sm font-mono text-muted-foreground">s</span>
                 </div>
                 <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs w-16 bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
             </div>
-            <div className="flex items-center space-x-1 min-w-[32px] p-1">
+            <div className="flex items-center space-x-1 min-w-[32px] p-3">
                 <Timer className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-mono font-bold">{remaining}</span>
             </div>
@@ -151,7 +151,7 @@ const TrafficLightController = ({
                     <Minus className="w-3 h-3" />
                 </Button>
             </div>
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center pl-1">
                 <Button size="icon" onClick={handleReset} className="h-5 w-5 bg-green-500/50 hover:bg-green-600/50 text-white">
                     <RotateCcw className="w-3 h-3" />
                 </Button>
@@ -200,15 +200,15 @@ const LiveTrafficControlContent = ({
         <TableHeader>
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
-            <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-2 min-w-[280px]">Signal Control</TableHead>
+            <TableHead className="w-[100px] px-1">Incident Type</TableHead>
+            <TableHead className="text-right pr-1 min-w-[280px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {(isFullScreen ? incidents : incidents.slice(0, 3)).map((incident) => (
             <TableRow key={incident.id}>
-              <TableCell className="font-medium pl-4">{incident.location}</TableCell>
-              <TableCell className="text-xs">{incident.type}</TableCell>
+              <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
+              <TableCell className="text-xs px-1 py-1.5">{incident.type}</TableCell>
               <TableCell className="text-right p-1">
                 <TrafficLightController
                   incidentId={incident.id}
