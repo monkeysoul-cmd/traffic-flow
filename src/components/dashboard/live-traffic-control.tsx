@@ -99,9 +99,9 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
             />
             <Button size="sm" variant="outline" onClick={handleStart} className="h-8 px-2">Start</Button>
         </div>
-         <div className="flex items-center space-x-2 min-w-[60px]">
+         <div className="flex items-center space-x-2 min-w-[50px]">
             <Timer className="w-4 h-4 text-muted-foreground" />
-            <span className="text-lg font-mono font-bold">{remaining}s</span>
+            <span className="text-base font-mono font-bold">{remaining}s</span>
          </div>
          <div className="flex flex-col space-y-1">
             <Button size="icon" variant="ghost" onClick={handleAdd10s} className="h-6 w-6">
