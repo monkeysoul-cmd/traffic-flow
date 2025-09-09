@@ -97,7 +97,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                 onChange={(e) => setDuration(parseInt(e.target.value, 10) || 0)}
                 className="w-14 h-8 text-center"
             />
-            <Button size="sm" variant="outline" onClick={handleStart} className="h-8">Start</Button>
+            <Button size="sm" variant="outline" onClick={handleStart} className="h-8 px-2">Start</Button>
         </div>
          <div className="flex items-center space-x-2 min-w-[60px]">
             <Timer className="w-4 h-4 text-muted-foreground" />
