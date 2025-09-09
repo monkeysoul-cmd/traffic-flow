@@ -95,7 +95,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                 type="number" 
                 value={duration}
                 onChange={(e) => setDuration(parseInt(e.target.value, 10) || 0)}
-                className="w-14 h-7 text-center text-xs"
+                className="w-16 h-7 text-center text-xs"
             />
             <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">Start</Button>
         </div>
