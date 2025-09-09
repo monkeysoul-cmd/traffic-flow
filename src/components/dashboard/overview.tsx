@@ -6,12 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import LiveTrafficControl from "./live-traffic-control";
+import { ScrollArea } from "../ui/scroll-area";
 
 const recentIncidents = [
   { id: "INC-001", location: "Main St & 1st Ave", type: "Accident", severity: "High", time: "10:45 AM" },
   { id: "INC-002", location: "Oakland Bridge", type: "Road Closure", severity: "Medium", time: "10:30 AM" },
   { id: "INC-003", location: "Highway 5, Exit 23", type: "Congestion", severity: "Low", time: "10:15 AM" },
   { id: "INC-004", location: "Downtown Tunnel", type: "Accident", severity: "High", time: "9:50 AM" },
+  { id: "INC-005", location: "Industrial Park", type: "Roadwork", severity: "Medium", time: "9:30 AM" },
+  { id: "INC-006", location: "West End", type: "Congestion", severity: "Low", time: "9:15 AM" },
 ];
 
 const TrafficLight = ({ severity }: { severity: 'High' | 'Medium' | 'Low' }) => {
@@ -64,7 +67,7 @@ export default function Overview() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">4</div>
+            <div className="text-2xl font-bold">6</div>
             <p className="text-xs text-muted-foreground">2 high severity</p>
           </CardContent>
         </Card>
@@ -92,54 +95,58 @@ export default function Overview() {
         <LiveTrafficControl incidents={recentIncidents} />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Incidents</CardTitle>
-          <CardDescription>Live feed of detected traffic incidents.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Status</TableHead>
-                <TableHead>Incident ID</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Severity</TableHead>
-                <TableHead>Time</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentIncidents.map((incident) => (
-                <TableRow key={incident.id}>
-                  <TableCell>
-                    <TrafficLight severity={incident.severity as 'High' | 'Medium' | 'Low'} />
-                  </TableCell>
-                  <TableCell className="font-mono">{incident.id}</TableCell>
-                  <TableCell>{incident.location}</TableCell>
-                  <TableCell>{incident.type}</TableCell>
-                  <TableCell>
-                    <Badge variant={incident.severity === 'High' ? 'destructive' : incident.severity === 'Medium' ? 'secondary' : 'outline'}>
-                        {incident.severity}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{incident.time}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-      
-      <Card>
+      <div className="grid lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2">
           <CardHeader>
-              <CardTitle>Traffic Volume</CardTitle>
-              <CardDescription>Last 24 hours</CardDescription>
+            <CardTitle>Recent Incidents</CardTitle>
+            <CardDescription>Live feed of detected traffic incidents.</CardDescription>
           </CardHeader>
-          <CardContent>
-              <TrafficVolumeChart />
+          <CardContent className="p-0">
+            <ScrollArea className="h-72">
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead className="pl-6">Status</TableHead>
+                        <TableHead>Incident ID</TableHead>
+                        <TableHead>Location</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Severity</TableHead>
+                        <TableHead className="pr-6">Time</TableHead>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {recentIncidents.map((incident) => (
+                        <TableRow key={incident.id}>
+                        <TableCell className="pl-6">
+                            <TrafficLight severity={incident.severity as 'High' | 'Medium' | 'Low'} />
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">{incident.id}</TableCell>
+                        <TableCell className="text-xs">{incident.location}</TableCell>
+                        <TableCell className="text-xs">{incident.type}</TableCell>
+                        <TableCell>
+                            <Badge variant={incident.severity === 'High' ? 'destructive' : incident.severity === 'Medium' ? 'secondary' : 'outline'} className="text-xs">
+                                {incident.severity}
+                            </Badge>
+                        </TableCell>
+                        <TableCell className="pr-6 text-xs">{incident.time}</TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </ScrollArea>
           </CardContent>
-      </Card>
+        </Card>
+        
+        <Card>
+            <CardHeader>
+                <CardTitle>Traffic Volume</CardTitle>
+                <CardDescription>Last 24 hours</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <TrafficVolumeChart />
+            </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
