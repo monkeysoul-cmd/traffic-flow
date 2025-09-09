@@ -101,7 +101,7 @@ const TrafficLightController = ({
 
     return (
         <div className="flex items-center justify-end space-x-1">
-            <div className="flex flex-col items-center gap-2 mr-1">
+            <div className="flex flex-col items-center gap-2 mr-2">
                 <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                     <button
                         onClick={() => onStateChange({ lightState: 'red' })}
@@ -128,14 +128,14 @@ const TrafficLightController = ({
                 <span className="text-xs text-muted-foreground capitalize">{lightState}</span>
             </div>
             <div className="flex flex-col items-center space-y-1">
-                <div className="flex items-center">
+                <div className="relative w-16">
                     <Input
                         type="number"
                         value={duration}
                         onChange={handleDurationChange}
-                        className="w-16 h-7 text-center text-sm"
+                        className="w-full h-7 text-center text-sm pr-4"
                     />
-                    <span className="text-sm font-mono font-bold -ml-6 text-muted-foreground">s</span>
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm font-mono text-muted-foreground">s</span>
                 </div>
                 <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs w-16 bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
             </div>
@@ -209,7 +209,7 @@ const LiveTrafficControlContent = ({
             <TableRow key={incident.id}>
               <TableCell className="font-medium pl-4">{incident.location}</TableCell>
               <TableCell className="text-xs">{incident.type}</TableCell>
-              <TableCell className="text-right pr-2">
+              <TableCell className="text-right p-1">
                 <TrafficLightController
                   incidentId={incident.id}
                   controllerState={controllerStates[incident.id]}
