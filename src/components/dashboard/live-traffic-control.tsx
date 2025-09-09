@@ -90,24 +90,24 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
             </div>
             <span className="text-xs text-muted-foreground capitalize">{lightState}</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
             <Input 
                 type="number" 
                 value={duration}
                 onChange={(e) => setDuration(parseInt(e.target.value, 10) || 0)}
-                className="w-14 h-8 text-center"
+                className="w-12 h-7 text-center text-xs"
             />
-            <Button size="sm" variant="outline" onClick={handleStart} className="h-8 px-2">Start</Button>
+            <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">Start</Button>
         </div>
-         <div className="flex items-center space-x-2 min-w-[50px]">
+         <div className="flex items-center space-x-1 min-w-[40px]">
             <Timer className="w-4 h-4 text-muted-foreground" />
-            <span className="text-base font-mono font-bold">{remaining}s</span>
+            <span className="text-sm font-mono font-bold">{remaining}s</span>
          </div>
-         <div className="flex flex-col space-y-1">
-            <Button size="icon" variant="ghost" onClick={handleAdd10s} className="h-6 w-6">
+         <div className="flex flex-col space-y-0.5">
+            <Button size="icon" variant="ghost" onClick={handleAdd10s} className="h-5 w-5">
                 <Plus className="w-3 h-3" />
             </Button>
-            <Button size="icon" variant="ghost" onClick={handleReset} className="h-6 w-6">
+            <Button size="icon" variant="ghost" onClick={handleReset} className="h-5 w-5">
                 <RotateCcw className="w-3 h-3" />
             </Button>
          </div>
