@@ -101,7 +101,7 @@ const TrafficLightController = ({
 
     return (
         <div className="flex items-center justify-end space-x-2">
-            <div className="flex flex-col items-center gap-2 mr-2">
+            <div className="flex flex-col items-center gap-2 mr-4">
                 <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                     <button
                         onClick={() => onStateChange({ lightState: 'red' })}
@@ -128,28 +128,31 @@ const TrafficLightController = ({
                 <span className="text-xs text-muted-foreground capitalize">{lightState}</span>
             </div>
             <div className="flex flex-col items-center space-y-1">
-                <Input
-                    type="number"
-                    value={duration}
-                    onChange={handleDurationChange}
-                    className="w-12 h-7 text-center text-xs"
-                />
-                <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white">{isRunning ? 'Running' : 'Start'}</Button>
+                <div className="flex items-center">
+                    <Input
+                        type="number"
+                        value={duration}
+                        onChange={handleDurationChange}
+                        className="w-14 h-7 text-center text-sm"
+                    />
+                    <span className="text-sm font-mono font-bold -ml-6 text-muted-foreground">s</span>
+                </div>
+                <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
             </div>
-            <div className="flex items-center space-x-1 min-w-[40px]">
+            <div className="flex items-center space-x-1 min-w-[32px] ml-2">
                 <Timer className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-mono font-bold">{remaining}s</span>
+                <span className="text-sm font-mono font-bold">{remaining}</span>
             </div>
-            <div className="flex flex-col space-y-1">
-                <Button size="icon" onClick={handleAdd10s} className="h-5 w-5 bg-sky-500 hover:bg-sky-600 text-white">
+            <div className="flex flex-col space-y-1 ml-2">
+                <Button size="icon" onClick={handleAdd10s} className="h-5 w-5 bg-sky-500/50 hover:bg-sky-600/50 text-white">
                     <Plus className="w-3 h-3" />
                 </Button>
-                <Button size="icon" onClick={handleSubtract5s} className="h-5 w-5 bg-red-400 hover:bg-red-500 text-white">
+                <Button size="icon" onClick={handleSubtract5s} className="h-5 w-5 bg-red-400/50 hover:bg-red-500/50 text-white">
                     <Minus className="w-3 h-3" />
                 </Button>
             </div>
-            <div className="flex flex-col justify-center">
-                <Button size="icon" onClick={handleReset} className="h-5 w-5 bg-green-500 hover:bg-green-600 text-white">
+            <div className="flex flex-col justify-center ml-2">
+                <Button size="icon" onClick={handleReset} className="h-5 w-5 bg-green-500/50 hover:bg-green-600/50 text-white">
                     <RotateCcw className="w-3 h-3" />
                 </Button>
             </div>
@@ -198,7 +201,7 @@ const LiveTrafficControlContent = ({
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-4 min-w-[320px]">Signal Control</TableHead>
+            <TableHead className="text-right pr-4 min-w-[360px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
