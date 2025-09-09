@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { TrafficCone, Timer, Maximize, Minimize } from 'lucide-react';
+import { TrafficCone, Timer, Maximize, Minimize, RotateCcw, Plus } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
@@ -50,6 +50,18 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
     setRemaining(duration);
   }
 
+  const handleReset = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    setRemaining(0);
+  };
+
+  const handleAdd10s = () => {
+    setRemaining(prev => prev + 10);
+  };
+
+
   return (
     <div className="flex items-center justify-end space-x-2">
         <div className="flex flex-col items-center gap-2">
@@ -83,13 +95,21 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                 type="number" 
                 value={duration}
                 onChange={(e) => setDuration(parseInt(e.target.value, 10) || 0)}
-                className="w-16 h-8 text-center"
+                className="w-14 h-8 text-center"
             />
             <Button size="sm" variant="outline" onClick={handleStart} className="h-8">Start</Button>
         </div>
          <div className="flex items-center space-x-2 min-w-[60px]">
             <Timer className="w-4 h-4 text-muted-foreground" />
             <span className="text-lg font-mono font-bold">{remaining}s</span>
+         </div>
+         <div className="flex flex-col space-y-1">
+            <Button size="icon" variant="ghost" onClick={handleAdd10s} className="h-6 w-6">
+                <Plus className="w-3 h-3" />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={handleReset} className="h-6 w-6">
+                <RotateCcw className="w-3 h-3" />
+            </Button>
          </div>
     </div>
   );
@@ -152,7 +172,7 @@ export default function LiveTrafficControl({ incidents }: { incidents: Incident[
         <LiveTrafficControlContent incidents={incidents} />
       </Card>
       <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
-        <ScrollArea className="h-full w-full">
+        <ScrollArea className="h-full w-full [&>div>div[style*='display:block;']]:hidden">
             <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
         </ScrollArea>
       </DialogContent>
