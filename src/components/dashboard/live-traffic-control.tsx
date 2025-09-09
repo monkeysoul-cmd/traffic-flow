@@ -100,8 +100,8 @@ const TrafficLightController = ({
     }
 
     return (
-        <div className="flex items-center justify-end space-x-2">
-            <div className="flex flex-col items-center gap-2 mr-4">
+        <div className="flex items-center justify-end space-x-1">
+            <div className="flex flex-col items-center gap-2 mr-1">
                 <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                     <button
                         onClick={() => onStateChange({ lightState: 'red' })}
@@ -139,11 +139,11 @@ const TrafficLightController = ({
                 </div>
                 <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs w-16 bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
             </div>
-            <div className="flex items-center space-x-1 min-w-[32px] ml-2">
+            <div className="flex items-center space-x-1 min-w-[32px]">
                 <Timer className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-mono font-bold">{remaining}</span>
             </div>
-            <div className="flex flex-col space-y-1 ml-2">
+            <div className="flex flex-col space-y-1">
                 <Button size="icon" onClick={handleAdd10s} className="h-5 w-5 bg-sky-500/50 hover:bg-sky-600/50 text-white">
                     <Plus className="w-3 h-3" />
                 </Button>
@@ -151,7 +151,7 @@ const TrafficLightController = ({
                     <Minus className="w-3 h-3" />
                 </Button>
             </div>
-            <div className="flex flex-col justify-center ml-2">
+            <div className="flex flex-col justify-center">
                 <Button size="icon" onClick={handleReset} className="h-5 w-5 bg-green-500/50 hover:bg-green-600/50 text-white">
                     <RotateCcw className="w-3 h-3" />
                 </Button>
@@ -201,7 +201,7 @@ const LiveTrafficControlContent = ({
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-2 min-w-[350px]">Signal Control</TableHead>
+            <TableHead className="text-right pr-2 min-w-[280px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
