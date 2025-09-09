@@ -201,7 +201,7 @@ const LiveTrafficControlContent = ({
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-4 min-w-[380px]">Signal Control</TableHead>
+            <TableHead className="text-right pr-2 min-w-[350px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -209,7 +209,7 @@ const LiveTrafficControlContent = ({
             <TableRow key={incident.id}>
               <TableCell className="font-medium pl-4">{incident.location}</TableCell>
               <TableCell className="text-xs">{incident.type}</TableCell>
-              <TableCell className="text-right pr-4">
+              <TableCell className="text-right pr-2">
                 <TrafficLightController
                   incidentId={incident.id}
                   controllerState={controllerStates[incident.id]}
