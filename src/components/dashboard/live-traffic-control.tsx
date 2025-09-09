@@ -139,7 +139,7 @@ const TrafficLightController = ({
                 </div>
                 <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs w-16 bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
             </div>
-            <div className="flex items-center space-x-1 min-w-[32px]">
+            <div className="flex items-center space-x-1 min-w-[32px] p-1">
                 <Timer className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-mono font-bold">{remaining}</span>
             </div>
