@@ -137,7 +137,7 @@ export default function Overview() {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="h-full">
             <CardHeader>
                 <CardTitle>Traffic Volume</CardTitle>
                 <CardDescription>Last 24 hours</CardDescription>

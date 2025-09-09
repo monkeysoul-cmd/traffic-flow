@@ -27,7 +27,7 @@ const chartConfig = {
 
 export default function TrafficVolumeChart() {
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full aspect-video">
+    <ChartContainer config={chartConfig} className="min-h-[200px] w-full h-full">
       <BarChart accessibilityLayer data={chartData}>
         <XAxis
           dataKey="hour"
