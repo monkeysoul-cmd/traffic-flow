@@ -71,36 +71,26 @@ export default function Overview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-              <CardHeader>
-                  <CardTitle>Traffic Volume</CardTitle>
-                  <CardDescription>Last 24 hours</CardDescription>
-              </CardHeader>
-              <CardContent>
-                  <TrafficVolumeChart />
-              </CardContent>
-          </Card>
-          <Card>
-              <CardHeader>
-                  <CardTitle>Congestion Hotspots</CardTitle>
-                  <CardDescription>Real-time traffic map</CardDescription>
-              </CardHeader>
-              <CardContent>
-                  <div className="aspect-video w-full overflow-hidden rounded-md">
-                      <Image
-                          src="https://picsum.photos/600/400"
-                          alt="Traffic map with hotspots"
-                          width={600}
-                          height={400}
-                          data-ai-hint="city map"
-                          className="w-full h-full object-cover"
-                      />
-                  </div>
-              </CardContent>
-          </Card>
+        <Card>
+            <CardHeader>
+                <CardTitle>Congestion Hotspots</CardTitle>
+                <CardDescription>Real-time traffic map</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="aspect-video w-full overflow-hidden rounded-md">
+                    <Image
+                        src="https://picsum.photos/600/400"
+                        alt="Traffic map with hotspots"
+                        width={600}
+                        height={400}
+                        data-ai-hint="city map"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            </CardContent>
+        </Card>
+        <LiveTrafficControl incidents={recentIncidents} />
       </div>
-
-      <LiveTrafficControl incidents={recentIncidents} />
 
       <Card>
         <CardHeader>
@@ -139,6 +129,16 @@ export default function Overview() {
             </TableBody>
           </Table>
         </CardContent>
+      </Card>
+      
+      <Card>
+          <CardHeader>
+              <CardTitle>Traffic Volume</CardTitle>
+              <CardDescription>Last 24 hours</CardDescription>
+          </CardHeader>
+          <CardContent>
+              <TrafficVolumeChart />
+          </CardContent>
       </Card>
     </div>
   );
