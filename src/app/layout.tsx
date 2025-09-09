@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'TrafficFlow',
+  title: 'Traffic Flow',
   description: 'Intelligent Traffic Management System',
 };
 

@@ -25,7 +25,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
-            <h1 className="text-3xl font-bold font-headline">TrafficFlow</h1>
+            <h1 className="text-3xl font-bold font-headline">Traffic Flow</h1>
           </div>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>Enter your credentials to access the dashboard.</CardDescription>

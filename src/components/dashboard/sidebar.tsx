@@ -29,7 +29,7 @@ export default function DashboardSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4 pb-12">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-semibold">TrafficFlow</span>
+          <span className="text-xl font-semibold">Traffic Flow</span>
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">
