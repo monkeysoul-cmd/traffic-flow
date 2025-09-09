@@ -120,7 +120,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                         setRemaining(newDuration);
                     }
                 }}
-                className="w-14 h-7 text-center text-xs"
+                className="w-12 h-7 text-center text-xs"
             />
             <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">{isRunning ? 'Running' : 'Start'}</Button>
         </div>
@@ -128,7 +128,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
             <Timer className="w-4 h-4 text-muted-foreground" />
             <span className="text-sm font-mono font-bold">{remaining}s</span>
          </div>
-         <div className="flex flex-col space-y-0.5">
+         <div className="flex flex-col space-y-1">
             <Button size="icon" variant="ghost" onClick={handleAdd10s} className="h-5 w-5">
                 <Plus className="w-3 h-3" />
             </Button>
@@ -176,7 +176,7 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-4 min-w-[340px]">Signal Control</TableHead>
+            <TableHead className="text-right pr-4 min-w-[320px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
