@@ -90,7 +90,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
             </div>
             <span className="text-xs text-muted-foreground capitalize">{lightState}</span>
         </div>
-        <div className="flex items-center space-x-1">
+        <div className="flex flex-col items-center space-y-1">
             <Input 
                 type="number" 
                 value={duration}
