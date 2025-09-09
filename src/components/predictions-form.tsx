@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, BrainCircuit, MapPin, Lightbulb } from 'lucide-react';
+import TrafficLightLoader from './traffic-light-loader';
 
 const defaultHistoricalData = JSON.stringify({
   "daily_average_speed": "35 km/h",
@@ -110,7 +111,7 @@ export default function PredictionsForm() {
         <CardContent className="space-y-6">
           {isLoading && (
             <div className="flex items-center justify-center h-full">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <TrafficLightLoader />
             </div>
           )}
           {result && (

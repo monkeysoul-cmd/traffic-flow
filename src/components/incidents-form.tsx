@@ -11,6 +11,7 @@ import { Loader2, ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
 import { Progress } from "@/components/ui/progress"
 import { Badge } from '@/components/ui/badge';
+import TrafficLightLoader from './traffic-light-loader';
 
 export default function IncidentsForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -114,7 +115,7 @@ export default function IncidentsForm() {
         <CardContent className="space-y-4">
           {isLoading && (
             <div className="flex items-center justify-center h-48">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <TrafficLightLoader />
             </div>
           )}
           {result && (

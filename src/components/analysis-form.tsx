@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Upload } from 'lucide-react';
 import Image from 'next/image';
+import TrafficLightLoader from './traffic-light-loader';
 
 export default function AnalysisForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -114,7 +115,7 @@ export default function AnalysisForm() {
         <CardContent className="space-y-4">
           {isLoading && (
             <div className="flex items-center justify-center h-48">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <TrafficLightLoader />
             </div>
           )}
           {result && (
