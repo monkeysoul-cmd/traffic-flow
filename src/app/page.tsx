@@ -10,7 +10,7 @@ import { Car, TrafficCone } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@urbanflow.com');
+  const [email, setEmail] = useState('admin@trafficflow.com');
   const [password, setPassword] = useState('password');
 
   const handleLogin = (e: React.FormEvent) => {
@@ -26,7 +26,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             <TrafficCone className="w-10 h-10 text-primary" />
-            <h1 className="text-3xl font-bold font-headline">UrbanFlow</h1>
+            <h1 className="text-3xl font-bold font-headline">TrafficFlow</h1>
           </div>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>Enter your credentials to access the dashboard.</CardDescription>

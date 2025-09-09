@@ -35,7 +35,7 @@ export default function DashboardSidebar() {
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
           <TrafficCone className="w-8 h-8 text-primary" />
-          <span className="text-xl font-semibold">UrbanFlow</span>
+          <span className="text-xl font-semibold">TrafficFlow</span>
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">
