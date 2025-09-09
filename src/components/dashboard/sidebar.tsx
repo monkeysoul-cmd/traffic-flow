@@ -35,7 +35,7 @@ export default function DashboardSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">
-        <SidebarMenu className="gap-2">
+        <SidebarMenu className="gap-4">
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label} className="bg-card">
