@@ -70,36 +70,36 @@ export default function Overview() {
         </Card>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-5">
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Traffic Volume</CardTitle>
-            <CardDescription>Last 24 hours</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <TrafficVolumeChart />
-          </CardContent>
-        </Card>
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Congestion Hotspots</CardTitle>
-            <CardDescription>Real-time traffic map</CardDescription>
-          </CardHeader>
-          <CardContent>
-             <div className="aspect-video w-full overflow-hidden rounded-md">
-              <Image
-                src="https://picsum.photos/600/400"
-                alt="Traffic map with hotspots"
-                width={600}
-                height={400}
-                data-ai-hint="city map"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+              <CardHeader>
+                  <CardTitle>Traffic Volume</CardTitle>
+                  <CardDescription>Last 24 hours</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <TrafficVolumeChart />
+              </CardContent>
+          </Card>
+          <Card>
+              <CardHeader>
+                  <CardTitle>Congestion Hotspots</CardTitle>
+                  <CardDescription>Real-time traffic map</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <div className="aspect-video w-full overflow-hidden rounded-md">
+                      <Image
+                          src="https://picsum.photos/600/400"
+                          alt="Traffic map with hotspots"
+                          width={600}
+                          height={400}
+                          data-ai-hint="city map"
+                          className="w-full h-full object-cover"
+                      />
+                  </div>
+              </CardContent>
+          </Card>
       </div>
-      
+
       <LiveTrafficControl incidents={recentIncidents} />
 
       <Card>
