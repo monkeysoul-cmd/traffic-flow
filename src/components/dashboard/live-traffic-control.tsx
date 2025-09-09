@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { TrafficCone, Timer, Maximize, Minimize, RotateCcw, Plus } from 'lucide-react';
+import { TrafficCone, Timer, Maximize, Minimize, RotateCcw, Plus, Minus } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
@@ -61,6 +61,10 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
     setRemaining(prev => prev + 10);
   };
 
+  const handleSubtract5s = () => {
+    setRemaining(prev => Math.max(0, prev - 5));
+  }
+
 
   return (
     <div className="flex items-center justify-end space-x-2">
@@ -107,6 +111,11 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
             <Button size="icon" variant="ghost" onClick={handleAdd10s} className="h-5 w-5">
                 <Plus className="w-3 h-3" />
             </Button>
+            <Button size="icon" variant="ghost" onClick={handleSubtract5s} className="h-5 w-5">
+                <Minus className="w-3 h-3" />
+            </Button>
+         </div>
+         <div className="flex flex-col space-y-0.5">
             <Button size="icon" variant="ghost" onClick={handleReset} className="h-5 w-5">
                 <RotateCcw className="w-3 h-3" />
             </Button>
@@ -146,7 +155,7 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-4 min-w-[320px]">Signal Control</TableHead>
+            <TableHead className="text-right pr-4 min-w-[340px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
