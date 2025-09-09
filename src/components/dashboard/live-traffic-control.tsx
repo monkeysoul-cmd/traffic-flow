@@ -133,11 +133,11 @@ const TrafficLightController = ({
                         type="number"
                         value={duration}
                         onChange={handleDurationChange}
-                        className="w-14 h-7 text-center text-sm"
+                        className="w-16 h-7 text-center text-sm"
                     />
                     <span className="text-sm font-mono font-bold -ml-6 text-muted-foreground">s</span>
                 </div>
-                <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
+                <Button size="sm" onClick={handleStart} className="h-7 px-2 text-xs w-16 bg-blue-600/50 hover:bg-blue-700/50 text-white">{isRunning ? 'Running' : 'Start'}</Button>
             </div>
             <div className="flex items-center space-x-1 min-w-[32px] ml-2">
                 <Timer className="w-4 h-4 text-muted-foreground" />
@@ -201,7 +201,7 @@ const LiveTrafficControlContent = ({
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-4 min-w-[360px]">Signal Control</TableHead>
+            <TableHead className="text-right pr-4 min-w-[420px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
