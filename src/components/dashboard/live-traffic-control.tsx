@@ -100,7 +100,7 @@ const TrafficLightController = ({
     }
 
     return (
-        <div className="flex items-center justify-end space-x-1">
+        <div className="flex items-center justify-center space-x-1">
             <div className="flex flex-col items-center gap-2 mr-4">
                 <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                     <button
@@ -201,7 +201,7 @@ const LiveTrafficControlContent = ({
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead className="w-[100px] px-1">Incident Type</TableHead>
-            <TableHead className="text-right pr-1 min-w-[280px]">Signal Control</TableHead>
+            <TableHead className="text-center pr-1 min-w-[280px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -209,7 +209,7 @@ const LiveTrafficControlContent = ({
             <TableRow key={incident.id}>
               <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
               <TableCell className="text-xs px-1 py-1.5">{incident.type}</TableCell>
-              <TableCell className="text-right p-1">
+              <TableCell className="p-1">
                 <TrafficLightController
                   incidentId={incident.id}
                   controllerState={controllerStates[incident.id]}
