@@ -8,7 +8,6 @@ export default function TrafficLightLoader({ className }: { className?: string }
         <div className="w-12 h-12 rounded-full light bg-gray-600"></div>
         <div className="w-12 h-12 rounded-full light bg-gray-600"></div>
       </div>
-      <p className="mt-4 text-sm text-muted-foreground animate-pulse">Analyzing...</p>
     </div>
   );
 }
