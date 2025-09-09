@@ -7,7 +7,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils';
 import { TrafficCone, Timer, Maximize, Minimize } from 'lucide-react';
 import { Input } from '../ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { ScrollArea } from '../ui/scroll-area';
+
 
 interface Incident {
   id: string;
@@ -110,6 +112,13 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
           </Button>
         </DialogTrigger>
       )}
+      {isFullScreen && (
+        <DialogClose asChild>
+            <Button variant="ghost" size="icon">
+                <Minimize className="w-5 h-5" />
+            </Button>
+        </DialogClose>
+      )}
     </CardHeader>
     <CardContent>
       <Table>
@@ -142,13 +151,10 @@ export default function LiveTrafficControl({ incidents }: { incidents: Incident[
       <Card>
         <LiveTrafficControlContent incidents={incidents} />
       </Card>
-      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Live Traffic Control (Full Screen)</DialogTitle>
-        </DialogHeader>
-        <div className="flex-grow overflow-auto">
-         <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
-        </div>
+      <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
+        <ScrollArea className="h-full">
+            <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
