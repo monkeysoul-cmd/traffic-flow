@@ -38,7 +38,7 @@ export default function DashboardSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
+                <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label} className="bg-card">
                     <Link href={item.href}>
                         <item.icon />
                         <span>{item.label}</span>
@@ -51,7 +51,7 @@ export default function DashboardSidebar() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Logout">
+            <SidebarMenuButton asChild tooltip="Logout" className="bg-card">
                 <Link href="/">
                     <LogOut />
                     <span>Logout</span>
