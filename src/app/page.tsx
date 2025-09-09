@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Car, TrafficCone } from 'lucide-react';
+import { Car, CarFront } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
-            <TrafficCone className="w-10 h-10 text-primary" />
+            <CarFront className="w-10 h-10 text-primary" />
             <h1 className="text-3xl font-bold font-headline">TrafficFlow</h1>
           </div>
           <CardTitle className="text-2xl">Login</CardTitle>

@@ -16,7 +16,7 @@ import {
   Camera,
   BrainCircuit,
   AlertTriangle,
-  TrafficCone,
+  CarFront,
   LogOut,
 } from 'lucide-react';
 
@@ -34,7 +34,7 @@ export default function DashboardSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
-          <TrafficCone className="w-8 h-8 text-primary" />
+          <CarFront className="w-8 h-8 text-primary" />
           <span className="text-xl font-semibold">TrafficFlow</span>
         </div>
       </SidebarHeader>
