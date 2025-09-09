@@ -5,8 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { TrafficCone, Timer } from 'lucide-react';
+import { TrafficCone, Timer, Maximize, Minimize } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface Incident {
   id: string;
@@ -92,38 +93,63 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
   );
 };
 
-export default function LiveTrafficControl({ incidents }: { incidents: Incident[] }) {
-  return (
-    <Card>
-      <CardHeader>
+const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incidents: Incident[], isFullScreen?: boolean }) => (
+  <>
+    <CardHeader className="flex flex-row items-start justify-between">
+      <div>
         <CardTitle className="flex items-center gap-2">
           <TrafficCone className="w-6 h-6" />
           Live Traffic Light Control
         </CardTitle>
         <CardDescription>Manually override traffic signals for active incident locations.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Location</TableHead>
-              <TableHead>Incident Type</TableHead>
-              <TableHead className="text-right">Signal Control</TableHead>
+      </div>
+      {!isFullScreen && (
+        <DialogTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <Maximize className="w-5 h-5" />
+          </Button>
+        </DialogTrigger>
+      )}
+    </CardHeader>
+    <CardContent>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Location</TableHead>
+            <TableHead>Incident Type</TableHead>
+            <TableHead className="text-right">Signal Control</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {(isFullScreen ? incidents : incidents.slice(0, 3)).map((incident) => (
+            <TableRow key={incident.id}>
+              <TableCell className="font-medium">{incident.location}</TableCell>
+              <TableCell>{incident.type}</TableCell>
+              <TableCell className="text-right">
+                <TrafficLightController incidentId={incident.id} />
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {incidents.slice(0, 3).map((incident) => (
-              <TableRow key={incident.id}>
-                <TableCell className="font-medium">{incident.location}</TableCell>
-                <TableCell>{incident.type}</TableCell>
-                <TableCell className="text-right">
-                  <TrafficLightController incidentId={incident.id} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+          ))}
+        </TableBody>
+      </Table>
+    </CardContent>
+  </>
+);
+
+export default function LiveTrafficControl({ incidents }: { incidents: Incident[] }) {
+  return (
+    <Dialog>
+      <Card>
+        <LiveTrafficControlContent incidents={incidents} />
+      </Card>
+      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>Live Traffic Control (Full Screen)</DialogTitle>
+        </DialogHeader>
+        <div className="flex-grow overflow-auto">
+         <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
