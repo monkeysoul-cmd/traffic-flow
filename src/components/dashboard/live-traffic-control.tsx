@@ -24,37 +24,40 @@ type LightState = 'red' | 'yellow' | 'green';
 const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
   const [lightState, setLightState] = useState<LightState>('red');
   const [duration, setDuration] = useState(30);
-  const [remaining, setRemaining] = useState(0);
+  const [remaining, setRemaining] = useState(30);
+  const [isRunning, setIsRunning] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (remaining > 0) {
+    if (isRunning && remaining > 0) {
       timerRef.current = setTimeout(() => {
-        setRemaining(remaining - 1);
+        setRemaining(prev => prev - 1);
       }, 1000);
-    } else if (remaining === 0 && timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
+    } else if (remaining === 0 || !isRunning) {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+        setIsRunning(false);
     }
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
-  }, [remaining]);
+  }, [remaining, isRunning]);
 
   const handleStart = () => {
-    if (timerRef.current) {
-        clearTimeout(timerRef.current);
+    if (!isRunning) {
+        if (remaining === 0) {
+            setRemaining(duration);
+        }
+        setIsRunning(true);
     }
-    setRemaining(duration);
   }
 
   const handleReset = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    setRemaining(0);
+    setIsRunning(false);
+    setRemaining(duration);
   };
 
   const handleAdd10s = () => {
@@ -98,10 +101,16 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
             <Input 
                 type="number" 
                 value={duration}
-                onChange={(e) => setDuration(parseInt(e.target.value, 10) || 0)}
+                onChange={(e) => {
+                    const newDuration = parseInt(e.target.value, 10) || 0;
+                    setDuration(newDuration);
+                    if (!isRunning) {
+                        setRemaining(newDuration);
+                    }
+                }}
                 className="w-16 h-7 text-center text-xs"
             />
-            <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">Start</Button>
+            <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">{isRunning ? 'Running' : 'Start'}</Button>
         </div>
          <div className="flex items-center space-x-1 min-w-[40px]">
             <Timer className="w-4 h-4 text-muted-foreground" />
