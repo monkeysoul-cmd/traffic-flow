@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import LiveTrafficControl from "./live-traffic-control";
 
 const recentIncidents = [
   { id: "INC-001", location: "Main St & 1st Ave", type: "Accident", severity: "High", time: "10:45 AM" },
@@ -99,6 +100,8 @@ export default function Overview() {
         </Card>
       </div>
       
+      <LiveTrafficControl incidents={recentIncidents} />
+
       <Card>
         <CardHeader>
           <CardTitle>Recent Incidents</CardTitle>
