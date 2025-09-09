@@ -95,7 +95,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                 type="number" 
                 value={duration}
                 onChange={(e) => setDuration(parseInt(e.target.value, 10) || 0)}
-                className="w-12 h-7 text-center text-xs"
+                className="w-14 h-7 text-center text-xs"
             />
             <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">Start</Button>
         </div>
@@ -146,7 +146,7 @@ const LiveTrafficControlContent = ({ incidents, isFullScreen = false }: { incide
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
             <TableHead>Incident Type</TableHead>
-            <TableHead className="text-right pr-4">Signal Control</TableHead>
+            <TableHead className="text-right pr-4 min-w-[320px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -172,7 +172,7 @@ export default function LiveTrafficControl({ incidents }: { incidents: Incident[
         <LiveTrafficControlContent incidents={incidents} />
       </Card>
       <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
-        <ScrollArea className="h-full w-full [&>div>div[style*='display:block;']]:hidden">
+        <ScrollArea className="h-full w-full [&>div>div[style*='display:block;']]:!hidden">
             <LiveTrafficControlContent incidents={incidents} isFullScreen={true} />
         </ScrollArea>
       </DialogContent>
