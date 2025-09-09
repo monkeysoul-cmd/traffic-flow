@@ -20,7 +20,7 @@ import {
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/analysis', label: 'Real-Time Analysis', icon: Camera },
+  { href: '/dashboard/analysis', label: 'Live Analyze', icon: Camera },
 ];
 
 export default function DashboardSidebar() {
@@ -30,8 +30,8 @@ export default function DashboardSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4 pb-12">
         <div className="flex items-center gap-2">
-          <CarFront className="w-6 h-6 text-primary" />
-          <span className="text-lg font-semibold">TrafficFlow</span>
+          <CarFront className="w-8 h-8 text-primary" />
+          <span className="text-xl font-semibold">TrafficFlow</span>
         </div>
       </SidebarHeader>
       <SidebarContent className="p-2">

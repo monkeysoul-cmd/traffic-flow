@@ -73,7 +73,7 @@ export default function AnalysisForm() {
     <div className="grid md:grid-cols-2 gap-8">
       <Card>
         <CardHeader>
-          <CardTitle>Real-Time Traffic Analysis</CardTitle>
+          <CardTitle>Live Traffic Analysis</CardTitle>
           <CardDescription>Upload a traffic camera image to analyze vehicle count and congestion.</CardDescription>
         </CardHeader>
         <CardContent>
