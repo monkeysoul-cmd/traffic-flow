@@ -61,11 +61,23 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
   };
 
   const handleAdd10s = () => {
-    setRemaining(prev => prev + 10);
+    if (isRunning) {
+        setRemaining(prev => prev + 10);
+    } else {
+        const newDuration = duration + 10;
+        setDuration(newDuration);
+        setRemaining(newDuration);
+    }
   };
 
   const handleSubtract5s = () => {
-    setRemaining(prev => Math.max(0, prev - 5));
+    if(isRunning) {
+        setRemaining(prev => Math.max(0, prev - 5));
+    } else {
+        const newDuration = Math.max(0, duration - 5);
+        setDuration(newDuration);
+        setRemaining(newDuration);
+    }
   }
 
 
@@ -108,7 +120,7 @@ const TrafficLightController = ({ incidentId }: { incidentId: string }) => {
                         setRemaining(newDuration);
                     }
                 }}
-                className="w-16 h-7 text-center text-xs"
+                className="w-14 h-7 text-center text-xs"
             />
             <Button size="sm" variant="outline" onClick={handleStart} className="h-7 px-2 text-xs">{isRunning ? 'Running' : 'Start'}</Button>
         </div>
