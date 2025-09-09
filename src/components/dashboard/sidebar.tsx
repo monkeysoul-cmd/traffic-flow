@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   CarFront,
   LogOut,
+  TrafficCone,
 } from 'lucide-react';
 
 const menuItems = [
@@ -25,6 +26,7 @@ const menuItems = [
   { href: '/dashboard/analysis', label: 'Real-Time Analysis', icon: Camera },
   { href: '/dashboard/incidents', label: 'Incident Detection', icon: AlertTriangle },
   { href: '/dashboard/predictions', label: 'Congestion Prediction', icon: BrainCircuit },
+  { href: '/dashboard/lights', label: 'Traffic Light Control', icon: TrafficCone },
 ];
 
 export default function DashboardSidebar() {
