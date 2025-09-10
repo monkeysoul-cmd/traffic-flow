@@ -82,11 +82,11 @@ export default function Overview() {
             <CardContent>
                 <div className="aspect-video w-full overflow-hidden rounded-md">
                     <Image
-                        src="https://picsum.photos/seed/3/600/400"
-                        alt="Vehicles on a road"
+                        src="https://picsum.photos/seed/highway-traffic/600/400"
+                        alt="Highway with traffic"
                         width={600}
                         height={400}
-                        data-ai-hint="vehicles road"
+                        data-ai-hint="highway traffic"
                         className="w-full h-full object-cover"
                     />
                 </div>
