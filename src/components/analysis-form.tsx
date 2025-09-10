@@ -14,7 +14,7 @@ import TrafficLightLoader from './traffic-light-loader';
 export default function AnalysisForm() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [location, setLocation] = useState('Main St & 1st Ave');
+  const [location, setLocation] = useState('MG Road, Bangalore');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalyzeTrafficDataOutput | null>(null);
   const { toast } = useToast();
@@ -95,7 +95,7 @@ export default function AnalysisForm() {
                 id="location" 
                 value={location} 
                 onChange={(e) => setLocation(e.target.value)} 
-                placeholder="e.g., Main St & 1st Ave"
+                placeholder="e.g., MG Road, Bangalore"
               />
             </div>
             

@@ -9,12 +9,12 @@ import LiveTrafficControl from "./live-traffic-control";
 import { ScrollArea } from "../ui/scroll-area";
 
 const recentIncidents = [
-  { id: "INC-001", location: "Main St & 1st Ave", type: "Accident", severity: "High", time: "10:45 AM" },
-  { id: "INC-002", location: "Oakland Bridge", type: "Road Closure", severity: "Medium", time: "10:30 AM" },
-  { id: "INC-003", location: "Highway 5, Exit 23", type: "Congestion", severity: "Low", time: "10:15 AM" },
-  { id: "INC-004", location: "Downtown Tunnel", type: "Accident", severity: "High", time: "9:50 AM" },
-  { id: "INC-005", location: "Industrial Park", type: "Roadwork", severity: "Medium", time: "9:30 AM" },
-  { id: "INC-006", location: "West End", type: "Congestion", severity: "Low", time: "9:15 AM" },
+  { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", severity: "High", time: "10:45 AM" },
+  { id: "INC-002", location: "Bandra-Worli Sea Link", type: "Road Closure", severity: "Medium", time: "10:30 AM" },
+  { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Congestion", severity: "Low", time: "10:15 AM" },
+  { id: "INC-004", location: "Marine Drive", type: "Accident", severity: "High", time: "9:50 AM" },
+  { id: "INC-005", location: "Connaught Place", type: "Roadwork", severity: "Medium", time: "9:30 AM" },
+  { id: "INC-006", location: "Koramangala 5th Block", type: "Congestion", severity: "Low", time: "9:15 AM" },
 ];
 
 const TrafficLight = ({ severity }: { severity: 'High' | 'Medium' | 'Low' }) => {
@@ -82,7 +82,7 @@ export default function Overview() {
             <CardContent>
                 <div className="aspect-video w-full overflow-hidden rounded-md">
                     <Image
-                        src="https://picsum.photos/seed/traffic/600/400"
+                        src="https://picsum.photos/seed/3/600/400"
                         alt="Vehicles on a road"
                         width={600}
                         height={400}
