@@ -18,12 +18,20 @@ export default function DashboardHeader() {
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
+    const formatTime = () => {
+      return new Date().toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      });
+    };
+
     const timer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString());
+      setTime(formatTime());
     }, 1000);
 
     // Set initial time
-    setTime(new Date().toLocaleTimeString());
+    setTime(formatTime());
 
     return () => {
       clearInterval(timer);
