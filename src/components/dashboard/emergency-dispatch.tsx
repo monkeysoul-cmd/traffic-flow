@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Siren, Ambulance, Shield, ChevronsRight, Building, Truck } from 'lucide-react';
+import { Siren, Ambulance, Shield, ChevronsRight, Building, Truck, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 
@@ -17,16 +17,24 @@ interface Incident {
   time: string;
 }
 
+interface DispatchedUnit {
+  unit: string;
+  time: string;
+  incidentId: string;
+  location: string;
+}
+
 const unitIcons: { [key: string]: React.ReactNode } = {
   police: <Shield className="h-4 w-4" />,
   ambulance: <Ambulance className="h-4 w-4" />,
   fire: <Siren className="h-4 w-4" />,
+  'fire truck': <Truck className="h-4 w-4" />,
 };
 
 export default function EmergencyDispatch({ incidents }: { incidents: Incident[] }) {
   const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(incidents.find(i => i.severity === 'High')?.id || null);
   const [unitType, setUnitType] = useState('police');
-  const [dispatchedUnits, setDispatchedUnits] = useState<Record<string, { unit: string; time: string }[]>>({});
+  const [dispatchedUnits, setDispatchedUnits] = useState<DispatchedUnit[]>([]);
   const { toast } = useToast();
 
   const handleDispatch = () => {
@@ -39,22 +47,27 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
       return;
     }
 
+    const incident = incidents.find(i => i.id === selectedIncidentId);
+    if (!incident) return;
+
     const dispatchTime = new Date().toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
     });
 
-    setDispatchedUnits(prev => ({
+    setDispatchedUnits(prev => [
       ...prev,
-      [selectedIncidentId]: [
-        ...(prev[selectedIncidentId] || []),
-        { unit: unitType, time: dispatchTime },
-      ],
-    }));
+      {
+        unit: unitType,
+        time: dispatchTime,
+        incidentId: selectedIncidentId,
+        location: incident.location,
+      },
+    ]);
 
     toast({
       title: 'Unit Dispatched!',
-      description: `A ${unitType} unit has been dispatched to incident ${selectedIncidentId}.`,
+      description: `A ${unitType} unit has been dispatched to ${incident.location}.`,
     });
   };
 
@@ -104,7 +117,7 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
                     <Ambulance className="h-4 w-4" /> Ambulance
                   </div>
                 </SelectItem>
-                <SelectItem value="fire">
+                <SelectItem value="fire truck">
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4" /> Fire Truck
                   </div>
@@ -118,20 +131,26 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
         </div>
 
         <div className="space-y-2 pt-2">
-          <h4 className="font-medium">Dispatched Units</h4>
+          <h4 className="font-medium">All Dispatched Units</h4>
           <ScrollArea className="h-32 rounded-md border p-2">
-            {selectedIncidentId && dispatchedUnits[selectedIncidentId] ? (
-              dispatchedUnits[selectedIncidentId].map((dispatch, index) => (
-                <div key={index} className="flex items-center justify-between text-sm p-1.5 rounded-md hover:bg-muted/50">
-                  <div className="flex items-center gap-2">
-                    {unitIcons[dispatch.unit]}
-                    <span className="font-medium capitalize">{dispatch.unit}</span>
+            {dispatchedUnits.length > 0 ? (
+              dispatchedUnits.map((dispatch, index) => (
+                <div key={index} className="flex flex-col text-sm p-1.5 rounded-md hover:bg-muted/50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {unitIcons[dispatch.unit]}
+                      <span className="font-medium capitalize">{dispatch.unit}</span>
+                    </div>
+                    <Badge variant="secondary">{dispatch.time}</Badge>
                   </div>
-                  <Badge variant="secondary">{dispatch.time}</Badge>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1 pl-1">
+                    <MapPin className="h-3 w-3" />
+                    <span>{dispatch.location}</span>
+                  </div>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No units dispatched for this incident.</p>
+              <p className="text-sm text-muted-foreground text-center py-4">No units dispatched yet.</p>
             )}
           </ScrollArea>
         </div>
