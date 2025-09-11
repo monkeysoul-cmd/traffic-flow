@@ -15,8 +15,6 @@ const recentIncidents = [
   { id: "INC-002", location: "Bandra-Worli Sea Link", type: "Road Closure", priority: "Medium", time: "10:30 AM" },
   { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Heavy Traffic", priority: "Low", time: "10:15 AM" },
   { id: "INC-004", location: "Marine Drive", type: "Accident", priority: "High", time: "9:50 AM" },
-  { id: "INC-005", location: "Connaught Place", type: "Roadwork", priority: "Medium", time: "9:30 AM" },
-  { id: "INC-006", location: "Koramangala 5th Block", type: "Heavy Traffic", priority: "Low", time: "9:15 AM" },
 ];
 
 const TrafficLight = ({ priority }: { priority: 'High' | 'Medium' | 'Low' }) => {
@@ -44,7 +42,6 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">12,453</div>
-              <p className="text-xs text-muted-foreground">+5.2% from last hour</p>
             </CardContent>
           </Card>
         </Link>
@@ -58,7 +55,6 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">42 km/h</div>
-              <p className="text-xs text-muted-foreground">-1.5% from last hour</p>
             </CardContent>
           </Card>
         </Link>
@@ -78,13 +74,13 @@ export default function Overview() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">6</div>
+            <div className="text-2xl font-bold">4</div>
             <p className="text-xs text-muted-foreground">2 high priority</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CameraViews incidents={recentIncidents} />
         <LiveTrafficControl incidents={recentIncidents} />
       </div>
