@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import LiveTrafficControl from "./live-traffic-control";
 import { ScrollArea } from "../ui/scroll-area";
+import EmergencyDispatch from "./emergency-dispatch";
 
 const recentIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", severity: "High", time: "10:45 AM" },
@@ -86,7 +87,7 @@ export default function Overview() {
                         alt="Highway with traffic"
                         width={600}
                         height={400}
-                        data-ai-hint="highway traffic"
+                        data-ai-hint="vehicles on road"
                         className="w-full h-full object-cover"
                     />
                 </div>
@@ -136,17 +137,18 @@ export default function Overview() {
             </ScrollArea>
           </CardContent>
         </Card>
-        
-        <Card className="h-full">
-            <CardHeader>
-                <CardTitle>Traffic Volume</CardTitle>
-                <CardDescription>Last 24 hours</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <TrafficVolumeChart />
-            </CardContent>
-        </Card>
+        <EmergencyDispatch incidents={recentIncidents} />
       </div>
+      
+      <Card>
+          <CardHeader>
+              <CardTitle>Traffic Volume</CardTitle>
+              <CardDescription>Last 24 hours</CardDescription>
+          </CardHeader>
+          <CardContent>
+              <TrafficVolumeChart />
+          </CardContent>
+      </Card>
     </div>
   );
 }
