@@ -200,7 +200,6 @@ const LiveTrafficControlContent = ({
         <TableHeader>
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
-            <TableHead className="w-[100px] px-1">Incident Type</TableHead>
             <TableHead className="text-center pr-1 min-w-[280px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
@@ -208,7 +207,6 @@ const LiveTrafficControlContent = ({
           {(isFullScreen ? incidents : incidents.slice(0, 3)).map((incident) => (
             <TableRow key={incident.id}>
               <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
-              <TableCell className="text-xs px-1 py-1.5">{incident.type}</TableCell>
               <TableCell className="p-1">
                 <TrafficLightController
                   incidentId={incident.id}
