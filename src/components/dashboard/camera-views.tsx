@@ -23,12 +23,11 @@ export default function CameraViews({ incidents }: { incidents: Incident[] }) {
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {incidents.map((incident, index) => (
-            <div key={incident.id} className="relative aspect-video w-full overflow-hidden rounded-md group">
+            <div key={incident.id} className="relative aspect-[16/11.2] w-full overflow-hidden rounded-md group">
               <Image
                 src={`https://picsum.photos/seed/cam-${index + 1}/300/200`}
                 alt={`Camera view of ${incident.location}`}
-                width={300}
-                height={200}
+                fill
                 data-ai-hint="traffic camera"
                 className="w-full h-full object-cover"
               />
