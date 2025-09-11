@@ -74,7 +74,6 @@ export default function Overview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4</div>
-            <p className="text-xs text-muted-foreground">2 high priority</p>
           </CardContent>
         </Card>
       </div>
