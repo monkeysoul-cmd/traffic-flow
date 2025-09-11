@@ -18,6 +18,7 @@ import {
   BarChart,
   User,
   History,
+  HelpCircle,
 } from 'lucide-react';
 
 const menuItems = [
@@ -25,6 +26,7 @@ const menuItems = [
   { href: '/dashboard/analysis', label: 'Live Analyze', icon: Camera },
   { href: '/dashboard/flow-graph', label: 'Flow Graph', icon: BarChart },
   { href: '/dashboard/history', label: 'History', icon: History },
+  { href: '/dashboard/how-to-use', label: 'How to Use', icon: HelpCircle },
 ];
 
 export default function DashboardSidebar() {
