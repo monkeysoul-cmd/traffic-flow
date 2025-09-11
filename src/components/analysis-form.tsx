@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Upload } from 'lucide-react';
+import { Upload, MapPin } from 'lucide-react';
 import TrafficLightLoader from './traffic-light-loader';
 
 export default function AnalysisForm() {
@@ -90,7 +90,10 @@ export default function AnalysisForm() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <Label htmlFor="location">Location</Label>
+              </div>
               <Input 
                 id="location" 
                 value={location} 
