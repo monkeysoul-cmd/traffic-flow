@@ -13,7 +13,6 @@ import {
     TableHeader,
     TableRow,
   } from '@/components/ui/table';
-  import Image from 'next/image';
   import { HelpCircle, LayoutDashboard, Camera, TrafficCone, AlertTriangle, Siren, BarChart, History, Video, Upload } from 'lucide-react';
   
   export default function HowToUsePage() {
@@ -28,23 +27,6 @@ import {
             </p>
           </div>
         </div>
-  
-        <Card>
-          <CardHeader>
-            <CardTitle>Dashboard Snapshot</CardTitle>
-            <CardDescription>A quick overview of the main dashboard layout.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Image
-              src="https://picsum.photos/seed/dashboard-guide/1200/800"
-              alt="Dashboard Snapshot"
-              width={1000}
-              height={667}
-              className="rounded-lg border shadow-md"
-              data-ai-hint="dashboard screenshot"
-            />
-          </CardContent>
-        </Card>
   
         <Card>
           <CardHeader>
