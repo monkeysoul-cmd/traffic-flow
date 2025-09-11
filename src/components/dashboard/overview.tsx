@@ -53,7 +53,6 @@ export default function Overview() {
               <CardTitle className="text-sm font-medium">Average Speed</CardTitle>
               <div className="flex items-center gap-2">
                 <MoveRight className="h-4 w-4 text-muted-foreground" />
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
               </div>
             </CardHeader>
             <CardContent>
