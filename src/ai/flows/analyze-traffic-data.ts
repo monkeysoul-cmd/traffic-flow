@@ -26,10 +26,10 @@ const AnalyzeTrafficDataOutputSchema = z.object({
   vehicleCount: z
     .number()
     .describe('The number of vehicles detected in the camera feed.'),
-  congestionLevel: z
+  trafficLevel: z
     .string()
     .describe(
-      'The level of congestion detected in the camera feed (e.g., low, medium, high).'
+      'The level of traffic detected in the camera feed (e.g., low, medium, high).'
     ),
   potentialIncidents: z
     .string()
@@ -52,7 +52,7 @@ const analyzeTrafficDataPrompt = ai.definePrompt({
   output: {schema: AnalyzeTrafficDataOutputSchema},
   prompt: `You are an AI that analyzes real-time traffic data from camera feeds.
 
-You will receive a camera feed video, its location, and a timestamp. Your task is to identify the number of vehicles, the level of congestion, and any potential incidents.
+You will receive a camera feed video, its location, and a timestamp. Your task is to identify the number of vehicles, the level of traffic, and any potential incidents.
 
 Location: {{{location}}}
 Timestamp: {{{timestamp}}}
@@ -60,10 +60,10 @@ Camera Feed: {{media url=cameraFeedDataUri}}
 
 Analyze the camera feed and provide the following information:
 - vehicleCount: The number of vehicles detected in the camera feed.
-- congestionLevel: The level of congestion detected in the camera feed (e.g., low, medium, high).
+- trafficLevel: The level of traffic detected in the camera feed (e.g., low, medium, high).
 - potentialIncidents: Any potential incidents detected in the camera feed (e.g., accidents, road closures). If there are no incidents, leave this field blank.
 
-Ensure that the vehicle count is accurate. Base congestion level on the number of vehicles detected, with more vehicles meaning higher congestion.
+Ensure that the vehicle count is accurate. Base traffic level on the number of vehicles detected, with more vehicles meaning higher traffic.
 
 Output the information in JSON format.
 `,

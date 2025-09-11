@@ -74,7 +74,7 @@ export default function AnalysisForm() {
       <Card>
         <CardHeader>
           <CardTitle>Live Traffic Analysis</CardTitle>
-          <CardDescription>Upload a traffic camera video to analyze vehicle count and congestion.</CardDescription>
+          <CardDescription>Upload a traffic camera video to analyze vehicle count and traffic level.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -127,8 +127,8 @@ export default function AnalysisForm() {
                 <p className="text-2xl font-bold">{result.vehicleCount}</p>
               </div>
               <div>
-                <Label className="text-muted-foreground">Congestion Level</Label>
-                <p className="text-2xl font-bold capitalize">{result.congestionLevel}</p>
+                <Label className="text-muted-foreground">Traffic Level</Label>
+                <p className="text-2xl font-bold capitalize">{result.trafficLevel}</p>
               </div>
               <div>
                 <Label className="text-muted-foreground">Potential Incidents</Label>

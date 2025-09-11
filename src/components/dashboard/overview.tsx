@@ -12,10 +12,10 @@ import Link from "next/link";
 const recentIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", priority: "High", time: "10:45 AM" },
   { id: "INC-002", location: "Bandra-Worli Sea Link", type: "Road Closure", priority: "Medium", time: "10:30 AM" },
-  { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Congestion", priority: "Low", time: "10:15 AM" },
+  { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Heavy Traffic", priority: "Low", time: "10:15 AM" },
   { id: "INC-004", location: "Marine Drive", type: "Accident", priority: "High", time: "9:50 AM" },
   { id: "INC-005", location: "Connaught Place", type: "Roadwork", priority: "Medium", time: "9:30 AM" },
-  { id: "INC-006", location: "Koramangala 5th Block", type: "Congestion", priority: "Low", time: "9:15 AM" },
+  { id: "INC-006", location: "Koramangala 5th Block", type: "Heavy Traffic", priority: "Low", time: "9:15 AM" },
 ];
 
 const TrafficLight = ({ priority }: { priority: 'High' | 'Medium' | 'Low' }) => {
@@ -63,7 +63,7 @@ export default function Overview() {
         </Link>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Congestion Level</CardTitle>
+            <CardTitle className="text-sm font-medium">Traffic Level</CardTitle>
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -86,7 +86,7 @@ export default function Overview() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
             <CardHeader>
-                <CardTitle>Congestion Hotspots</CardTitle>
+                <CardTitle>High-Traffic Areas</CardTitle>
                 <CardDescription>Real-time traffic map</CardDescription>
             </CardHeader>
             <CardContent>
