@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Siren, Ambulance, Shield, ChevronsRight, Building, Truck, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
+import { useHistoryStore, DispatchedUnit } from '@/lib/history-store';
 
 interface Incident {
   id: string;
@@ -15,13 +16,6 @@ interface Incident {
   type: string;
   priority: 'High' | 'Medium' | 'Low';
   time: string;
-}
-
-interface DispatchedUnit {
-  unit: string;
-  time: string;
-  incidentId: string;
-  location: string;
 }
 
 const unitIcons: { [key: string]: React.ReactNode } = {
@@ -34,8 +28,9 @@ const unitIcons: { [key: string]: React.ReactNode } = {
 export default function EmergencyDispatch({ incidents }: { incidents: Incident[] }) {
   const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(incidents.find(i => i.priority === 'High')?.id || null);
   const [unitType, setUnitType] = useState('police');
-  const [dispatchedUnits, setDispatchedUnits] = useState<DispatchedUnit[]>([]);
   const { toast } = useToast();
+  const { addDispatchLog, getDispatchedUnits } = useHistoryStore();
+  const dispatchedUnits = getDispatchedUnits();
 
   const handleDispatch = () => {
     if (!selectedIncidentId) {
@@ -50,20 +45,12 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
     const incident = incidents.find(i => i.id === selectedIncidentId);
     if (!incident) return;
 
-    const dispatchTime = new Date().toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
+    addDispatchLog({
+      unit: unitType,
+      incidentId: selectedIncidentId,
+      location: incident.location,
+      user: 'bitfusion',
     });
-
-    setDispatchedUnits(prev => [
-      ...prev,
-      {
-        unit: unitType,
-        time: dispatchTime,
-        incidentId: selectedIncidentId,
-        location: incident.location,
-      },
-    ]);
 
     toast({
       title: 'Unit Dispatched!',
@@ -134,14 +121,14 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
           <h4 className="font-medium">All Dispatched Units</h4>
           <ScrollArea className="h-32 rounded-md border p-2">
             {dispatchedUnits.length > 0 ? (
-              dispatchedUnits.map((dispatch, index) => (
-                <div key={index} className="flex flex-col text-sm p-1.5 rounded-md hover:bg-muted/50">
+              dispatchedUnits.map((dispatch) => (
+                <div key={dispatch.id} className="flex flex-col text-sm p-1.5 rounded-md hover:bg-muted/50">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {unitIcons[dispatch.unit]}
                       <span className="font-medium capitalize">{dispatch.unit}</span>
                     </div>
-                    <Badge variant="secondary">{dispatch.time}</Badge>
+                    <Badge variant="secondary">{new Date(dispatch.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</Badge>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1 pl-1">
                     <MapPin className="h-3 w-3" />

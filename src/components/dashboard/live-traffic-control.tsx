@@ -9,6 +9,7 @@ import { TrafficCone, Timer, Maximize, Minimize, RotateCcw, Plus, Minus } from '
 import { Input } from '../ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
+import { useHistoryStore } from '@/lib/history-store';
 
 
 interface Incident {
@@ -28,16 +29,17 @@ interface ControllerState {
 }
 
 const TrafficLightController = ({
-    incidentId,
+    incident,
     controllerState,
     onStateChange,
 }: {
-    incidentId: string;
+    incident: Incident;
     controllerState: ControllerState;
     onStateChange: (state: Partial<ControllerState>) => void;
 }) => {
     const { lightState, duration, remaining, isRunning } = controllerState;
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const { addLightControlLog } = useHistoryStore();
 
     useEffect(() => {
         if (isRunning && remaining > 0) {
@@ -64,11 +66,21 @@ const TrafficLightController = ({
                 newRemaining = duration;
             }
             onStateChange({ isRunning: true, remaining: newRemaining });
+            addLightControlLog({
+              location: incident.location,
+              action: `Set to ${lightState.toUpperCase()} for ${newRemaining}s`,
+              user: 'bitfusion',
+            });
         }
     }
 
     const handleReset = () => {
         onStateChange({ isRunning: false, remaining: duration });
+        addLightControlLog({
+            location: incident.location,
+            action: 'Cycle Reset',
+            user: 'bitfusion',
+        });
     };
 
     const handleAdd10s = () => {
@@ -98,26 +110,35 @@ const TrafficLightController = ({
         }
     }
 
+    const handleLightStateChange = (newLightState: LightState) => {
+        onStateChange({ lightState: newLightState });
+        addLightControlLog({
+            location: incident.location,
+            action: `Set to ${newLightState.toUpperCase()}`,
+            user: 'bitfusion',
+        });
+    }
+
     return (
         <div className="flex items-center justify-center space-x-1">
             <div className="flex flex-col items-center gap-2 mr-4">
                 <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
                     <button
-                        onClick={() => onStateChange({ lightState: 'red' })}
+                        onClick={() => handleLightStateChange('red')}
                         className={cn(
                             'w-6 h-6 rounded-full transition-all',
                             lightState === 'red' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-gray-600'
                         )}
                     />
                     <button
-                        onClick={() => onStateChange({ lightState: 'yellow' })}
+                        onClick={() => handleLightStateChange('yellow')}
                         className={cn(
                             'w-6 h-6 rounded-full transition-all',
                             lightState === 'yellow' ? 'bg-yellow-500 shadow-[0_0_10px_#f59e0b]' : 'bg-gray-600'
                         )}
                     />
                     <button
-                        onClick={() => onStateChange({ lightState: 'green' })}
+                        onClick={() => handleLightStateChange('green')}
                         className={cn(
                             'w-6 h-6 rounded-full transition-all',
                             lightState === 'green' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-gray-600'
@@ -208,7 +229,7 @@ const LiveTrafficControlContent = ({
               <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
               <TableCell className="p-1">
                 <TrafficLightController
-                  incidentId={incident.id}
+                  incident={incident}
                   controllerState={controllerStates[incident.id]}
                   onStateChange={(newState) => onControllerStateChange(incident.id, newState)}
                 />

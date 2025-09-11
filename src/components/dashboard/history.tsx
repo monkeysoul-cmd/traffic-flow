@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar as CalendarIcon, Siren, TrafficCone } from 'lucide-react';
@@ -11,31 +11,26 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-
-const lightControlHistory = [
-  { id: 1, location: 'MG Road & Brigade Road', user: 'bitfusion', action: 'Set to GREEN for 60s', timestamp: new Date(2024, 6, 26, 10, 46) },
-  { id: 2, location: 'Marine Drive', user: 'bitfusion', action: 'Set to RED for 30s', timestamp: new Date(2024, 6, 26, 9, 51) },
-  { id: 3, location: 'MG Road & Brigade Road', user: 'bitfusion', action: 'Cycle Reset', timestamp: new Date(2024, 6, 25, 18, 20) },
-  { id: 4, location: 'Bandra-Worli Sea Link', user: 'other_admin', action: 'Set to YELLOW for 5s', timestamp: new Date(2024, 6, 25, 15, 10) },
-];
-
-const dispatchHistory = [
-  { id: 1, unit: 'police', incidentId: 'INC-001', location: 'MG Road & Brigade Road', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
-  { id: 2, unit: 'ambulance', incidentId: 'INC-001', location: 'MG Road & Brigade Road', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
-  { id: 3, unit: 'ambulance', incidentId: 'INC-004', location: 'Marine Drive', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 9, 50) },
-  { id: 4, unit: 'fire truck', incidentId: 'INC-007', location: 'Cyber Hub', user: 'other_admin', timestamp: new Date(2024, 6, 25, 14, 0) },
-];
+import { useHistoryStore, LightControlLog, DispatchLog } from '@/lib/history-store';
 
 export default function History() {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const { lightControlHistory, dispatchHistory } = useHistoryStore();
+  const [filteredLightHistory, setFilteredLightHistory] = useState<LightControlLog[]>([]);
+  const [filteredDispatchHistory, setFilteredDispatchHistory] = useState<DispatchLog[]>([]);
 
-  const filteredLightHistory = lightControlHistory.filter(item =>
-    date ? format(item.timestamp, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd') : true
-  );
-
-  const filteredDispatchHistory = dispatchHistory.filter(item =>
-    date ? format(item.timestamp, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd') : true
-  );
+  useEffect(() => {
+    setFilteredLightHistory(
+      lightControlHistory.filter(item =>
+        date ? format(item.timestamp, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd') : true
+      )
+    );
+    setFilteredDispatchHistory(
+      dispatchHistory.filter(item =>
+        date ? format(item.timestamp, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd') : true
+      )
+    );
+  }, [date, lightControlHistory, dispatchHistory]);
 
   return (
     <div className="space-y-6">
