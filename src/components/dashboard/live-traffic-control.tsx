@@ -203,7 +203,7 @@ const LiveTrafficControlContent = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {(isFullScreen ? incidents : incidents.slice(0, 3)).map((incident) => (
+          {(isFullScreen ? incidents : incidents.slice(0, 4)).map((incident) => (
             <TableRow key={incident.id}>
               <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
               <TableCell className="p-1">
