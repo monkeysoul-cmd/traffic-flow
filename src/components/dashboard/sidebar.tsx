@@ -60,7 +60,7 @@ export default function DashboardSidebar() {
                 </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="mt-2">
             <SidebarMenuButton asChild tooltip="Logout" className="bg-card">
                 <Link href="/">
                     <LogOut />
