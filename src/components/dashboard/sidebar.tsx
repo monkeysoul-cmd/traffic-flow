@@ -16,6 +16,7 @@ import {
   Camera,
   LogOut,
   BarChart,
+  User,
 } from 'lucide-react';
 
 const menuItems = [
@@ -50,6 +51,15 @@ export default function DashboardSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-2">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Profile" className="bg-card">
+              {/* TODO: Create a profile page */}
+                <Link href="#">
+                    <User />
+                    <span>Profile</span>
+                </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Logout" className="bg-card">
                 <Link href="/">
