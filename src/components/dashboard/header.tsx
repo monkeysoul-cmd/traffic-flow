@@ -12,6 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { ChevronDown } from 'lucide-react';
 
 export default function DashboardHeader() {
   return (
@@ -22,11 +23,9 @@ export default function DashboardHeader() {
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-            <Avatar className="h-9 w-9">
-              <AvatarImage src="https://picsum.photos/100/100" alt="User avatar" data-ai-hint="person face" />
-              <AvatarFallback>B</AvatarFallback>
-            </Avatar>
+          <Button variant="ghost" className="relative h-9">
+            <span className="font-medium">bitfusion</span>
+            <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
