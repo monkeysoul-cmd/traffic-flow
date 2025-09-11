@@ -28,7 +28,7 @@ export default function CameraViews({ incidents }: { incidents: Incident[] }) {
                 src={`https://picsum.photos/seed/cam-${index + 1}/300/200`}
                 alt={`Camera view of ${incident.location}`}
                 fill
-                data-ai-hint="traffic camera"
+                data-ai-hint="vehicles traffic"
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-1">
