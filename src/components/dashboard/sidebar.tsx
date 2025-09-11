@@ -61,7 +61,7 @@ export default function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem className="mt-2">
-            <SidebarMenuButton asChild tooltip="Logout" variant="destructive" className="bg-destructive/20 text-destructive-foreground/80 hover:bg-destructive/30 hover:text-destructive-foreground">
+            <SidebarMenuButton asChild tooltip="Logout" variant="destructive">
                 <Link href="/">
                     <LogOut />
                     <span>Logout</span>
