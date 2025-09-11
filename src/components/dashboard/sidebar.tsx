@@ -52,9 +52,8 @@ export default function DashboardSidebar() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Profile" className="bg-card">
-              {/* TODO: Create a profile page */}
-                <Link href="#">
+            <SidebarMenuButton asChild tooltip="Profile" isActive={pathname === '/dashboard/profile'} className="bg-card">
+                <Link href="/dashboard/profile">
                     <User />
                     <span>Profile</span>
                 </Link>
