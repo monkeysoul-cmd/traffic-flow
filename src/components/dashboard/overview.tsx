@@ -42,7 +42,6 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">12,453</div>
-              <p className="text-xs text-muted-foreground">+5.2% from last hour</p>
             </CardContent>
           </Card>
         </Link>
@@ -56,7 +55,6 @@ export default function Overview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">42 km/h</div>
-              <p className="text-xs text-muted-foreground">-1.5% from last hour</p>
             </CardContent>
           </Card>
         </Link>
