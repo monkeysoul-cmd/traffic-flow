@@ -10,20 +10,20 @@ import EmergencyDispatch from "./emergency-dispatch";
 import Link from "next/link";
 
 const recentIncidents = [
-  { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", severity: "High", time: "10:45 AM" },
-  { id: "INC-002", location: "Bandra-Worli Sea Link", type: "Road Closure", severity: "Medium", time: "10:30 AM" },
-  { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Congestion", severity: "Low", time: "10:15 AM" },
-  { id: "INC-004", location: "Marine Drive", type: "Accident", severity: "High", time: "9:50 AM" },
-  { id: "INC-005", location: "Connaught Place", type: "Roadwork", severity: "Medium", time: "9:30 AM" },
-  { id: "INC-006", location: "Koramangala 5th Block", type: "Congestion", severity: "Low", time: "9:15 AM" },
+  { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", priority: "High", time: "10:45 AM" },
+  { id: "INC-002", location: "Bandra-Worli Sea Link", type: "Road Closure", priority: "Medium", time: "10:30 AM" },
+  { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Congestion", priority: "Low", time: "10:15 AM" },
+  { id: "INC-004", location: "Marine Drive", type: "Accident", priority: "High", time: "9:50 AM" },
+  { id: "INC-005", location: "Connaught Place", type: "Roadwork", priority: "Medium", time: "9:30 AM" },
+  { id: "INC-006", location: "Koramangala 5th Block", type: "Congestion", priority: "Low", time: "9:15 AM" },
 ];
 
-const TrafficLight = ({ severity }: { severity: 'High' | 'Medium' | 'Low' }) => {
+const TrafficLight = ({ priority }: { priority: 'High' | 'Medium' | 'Low' }) => {
   return (
     <div className="flex space-x-1">
-      <div className={cn("w-3 h-3 rounded-full", severity === 'High' ? 'bg-red-500' : 'bg-gray-600')}></div>
-      <div className={cn("w-3 h-3 rounded-full", severity === 'Medium' ? 'bg-yellow-500' : 'bg-gray-600')}></div>
-      <div className={cn("w-3 h-3 rounded-full", severity === 'Low' ? 'bg-green-500' : 'bg-gray-600')}></div>
+      <div className={cn("w-3 h-3 rounded-full", priority === 'High' ? 'bg-red-500' : 'bg-gray-600')}></div>
+      <div className={cn("w-3 h-3 rounded-full", priority === 'Medium' ? 'bg-yellow-500' : 'bg-gray-600')}></div>
+      <div className={cn("w-3 h-3 rounded-full", priority === 'Low' ? 'bg-green-500' : 'bg-gray-600')}></div>
     </div>
   );
 };
@@ -78,7 +78,7 @@ export default function Overview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">6</div>
-            <p className="text-xs text-muted-foreground">2 high severity</p>
+            <p className="text-xs text-muted-foreground">2 high priority</p>
           </CardContent>
         </Card>
       </div>
@@ -120,7 +120,7 @@ export default function Overview() {
                         <TableHead>Incident ID</TableHead>
                         <TableHead>Location</TableHead>
                         <TableHead>Type</TableHead>
-                        <TableHead>Severity</TableHead>
+                        <TableHead>Priority</TableHead>
                         <TableHead className="pr-6">Time</TableHead>
                     </TableRow>
                     </TableHeader>
@@ -128,14 +128,14 @@ export default function Overview() {
                     {recentIncidents.map((incident) => (
                         <TableRow key={incident.id}>
                         <TableCell className="pl-6">
-                            <TrafficLight severity={incident.severity as 'High' | 'Medium' | 'Low'} />
+                            <TrafficLight priority={incident.priority as 'High' | 'Medium' | 'Low'} />
                         </TableCell>
                         <TableCell className="font-mono text-xs">{incident.id}</TableCell>
                         <TableCell className="text-xs">{incident.location}</TableCell>
                         <TableCell className="text-xs">{incident.type}</TableCell>
                         <TableCell>
-                            <Badge variant={incident.severity === 'High' ? 'destructive' : incident.severity === 'Medium' ? 'secondary' : 'outline'} className="text-xs">
-                                {incident.severity}
+                            <Badge variant={incident.priority === 'High' ? 'destructive' : incident.priority === 'Medium' ? 'secondary' : 'outline'} className="text-xs">
+                                {incident.priority}
                             </Badge>
                         </TableCell>
                         <TableCell className="pr-6 text-xs">{incident.time}</TableCell>

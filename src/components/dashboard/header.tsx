@@ -18,7 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { AlertTriangle } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 
-const highSeverityIncidents = [
+const highPriorityIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", time: "10:45 AM" },
   { id: "INC-004", location: "Marine Drive", type: "Accident", time: "9:50 AM" },
 ];
@@ -33,8 +33,8 @@ export default function DashboardHeader() {
         <PopoverTrigger asChild>
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
-            {highSeverityIncidents.length > 0 && (
-              <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 justify-center p-0">{highSeverityIncidents.length}</Badge>
+            {highPriorityIncidents.length > 0 && (
+              <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 justify-center p-0">{highPriorityIncidents.length}</Badge>
             )}
             <span className="sr-only">Toggle notifications</span>
           </Button>
@@ -43,16 +43,16 @@ export default function DashboardHeader() {
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='flex items-center gap-2 text-base'>
-                <AlertTriangle className='w-5 h-5 text-destructive'/> High-Severity Alerts
+                <AlertTriangle className='w-5 h-5 text-destructive'/> High-Priority Alerts
               </CardTitle>
               <CardDescription>
-                {highSeverityIncidents.length} active high-priority incidents.
+                {highPriorityIncidents.length} active high-priority incidents.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-48">
                 <div className="flex flex-col">
-                  {highSeverityIncidents.map((incident) => (
+                  {highPriorityIncidents.map((incident) => (
                     <Link href="/dashboard#emergency-dispatch" key={incident.id} className="text-sm p-3 hover:bg-muted/50 rounded-md">
                       <div className="font-medium">{incident.location}</div>
                       <div className="text-xs text-muted-foreground">

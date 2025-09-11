@@ -15,7 +15,7 @@ interface Incident {
   id: string;
   location: string;
   type: string;
-  severity: string;
+  priority: string;
   time: string;
 }
 

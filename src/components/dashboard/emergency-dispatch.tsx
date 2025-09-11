@@ -13,7 +13,7 @@ interface Incident {
   id: string;
   location: string;
   type: string;
-  severity: 'High' | 'Medium' | 'Low';
+  priority: 'High' | 'Medium' | 'Low';
   time: string;
 }
 
@@ -32,7 +32,7 @@ const unitIcons: { [key: string]: React.ReactNode } = {
 };
 
 export default function EmergencyDispatch({ incidents }: { incidents: Incident[] }) {
-  const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(incidents.find(i => i.severity === 'High')?.id || null);
+  const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(incidents.find(i => i.priority === 'High')?.id || null);
   const [unitType, setUnitType] = useState('police');
   const [dispatchedUnits, setDispatchedUnits] = useState<DispatchedUnit[]>([]);
   const { toast } = useToast();
@@ -71,7 +71,7 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
     });
   };
 
-  const highSeverityIncidents = incidents.filter(i => i.severity === 'High');
+  const highPriorityIncidents = incidents.filter(i => i.priority === 'High');
 
   return (
     <Card>
@@ -90,7 +90,7 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
               <SelectValue placeholder="Select an incident..." />
             </SelectTrigger>
             <SelectContent>
-              {highSeverityIncidents.map(incident => (
+              {highPriorityIncidents.map(incident => (
                 <SelectItem key={incident.id} value={incident.id}>
                   {incident.id} - {incident.location}
                 </SelectItem>
