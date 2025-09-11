@@ -146,7 +146,9 @@ export default function Overview() {
             </ScrollArea>
           </CardContent>
         </Card>
-        <EmergencyDispatch incidents={recentIncidents} />
+        <div id="emergency-dispatch">
+          <EmergencyDispatch incidents={recentIncidents} />
+        </div>
       </div>
     </div>
   );

@@ -51,14 +51,14 @@ export default function DashboardHeader() {
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-48">
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col">
                   {highSeverityIncidents.map((incident) => (
-                    <div key={incident.id} className="text-sm">
+                    <Link href="/dashboard#emergency-dispatch" key={incident.id} className="text-sm p-3 hover:bg-muted/50 rounded-md">
                       <div className="font-medium">{incident.location}</div>
                       <div className="text-xs text-muted-foreground">
                         {incident.type} at {incident.time}
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </ScrollArea>
