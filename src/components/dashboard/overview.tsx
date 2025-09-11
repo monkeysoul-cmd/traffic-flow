@@ -8,6 +8,7 @@ import LiveTrafficControl from "./live-traffic-control";
 import { ScrollArea } from "../ui/scroll-area";
 import EmergencyDispatch from "./emergency-dispatch";
 import Link from "next/link";
+import CameraViews from "./camera-views";
 
 const recentIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", priority: "High", time: "10:45 AM" },
@@ -84,24 +85,7 @@ export default function Overview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-            <CardHeader>
-                <CardTitle>Camera View</CardTitle>
-                <CardDescription>Live feed from a selected camera</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="aspect-video w-full overflow-hidden rounded-md">
-                    <Image
-                        src="https://picsum.photos/seed/traffic-cam/600/400"
-                        alt="Camera view of traffic"
-                        width={600}
-                        height={400}
-                        data-ai-hint="traffic camera"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            </CardContent>
-        </Card>
+        <CameraViews incidents={recentIncidents} />
         <LiveTrafficControl incidents={recentIncidents} />
       </div>
 
