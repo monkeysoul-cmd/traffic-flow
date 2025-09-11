@@ -14,7 +14,6 @@ import { ScrollArea } from '../ui/scroll-area';
 interface Incident {
   id: string;
   location: string;
-  type: string;
   priority: string;
   time: string;
 }
@@ -200,7 +199,7 @@ const LiveTrafficControlContent = ({
         <TableHeader>
           <TableRow>
             <TableHead className="pl-4">Location</TableHead>
-            <TableHead className="text-center pr-1 min-w-[280px]">Signal Control</TableHead>
+            <TableHead className="text-center px-1 min-w-[280px]">Signal Control</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
