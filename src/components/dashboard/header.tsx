@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
   DropdownMenu,
@@ -15,38 +14,11 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function DashboardHeader() {
-  const [time, setTime] = useState<string>('');
-
-  useEffect(() => {
-    const formatTime = () => {
-      return new Date().toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-      });
-    };
-
-    const timer = setInterval(() => {
-      setTime(formatTime());
-    }, 1000);
-
-    // Set initial time
-    setTime(formatTime());
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:px-6">
       <SidebarTrigger className="md:hidden" />
       <div className="flex-1">
-        {time && (
-          <div className="text-xl font-semibold text-foreground">
-            {time}
-          </div>
-        )}
+        {/* The clock component was here */}
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
