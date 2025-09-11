@@ -1,6 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { MoveRight, Car, AlertCircle, AlertTriangle } from "lucide-react";
-import TrafficVolumeChart from "./traffic-volume-chart";
 import Image from 'next/image';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -139,16 +138,6 @@ export default function Overview() {
         </Card>
         <EmergencyDispatch incidents={recentIncidents} />
       </div>
-      
-      <Card>
-          <CardHeader>
-              <CardTitle>Traffic Volume</CardTitle>
-              <CardDescription>Last 24 hours</CardDescription>
-          </CardHeader>
-          <CardContent>
-              <TrafficVolumeChart />
-          </CardContent>
-      </Card>
     </div>
   );
 }

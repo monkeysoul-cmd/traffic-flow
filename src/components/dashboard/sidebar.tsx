@@ -15,11 +15,13 @@ import {
   LayoutDashboard,
   Camera,
   LogOut,
+  BarChart,
 } from 'lucide-react';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/analysis', label: 'Live Analyze', icon: Camera },
+  { href: '/dashboard/flow-graph', label: 'Flow Graph', icon: BarChart },
 ];
 
 export default function DashboardSidebar() {
