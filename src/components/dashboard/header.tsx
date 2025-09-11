@@ -88,9 +88,6 @@ export default function DashboardHeader() {
             <Link href="/dashboard/profile">Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard/analysis">Manual</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
             <Link href="/dashboard/history">History</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
