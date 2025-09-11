@@ -65,7 +65,6 @@ export default function Overview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">Medium</div>
-            <p className="text-xs text-muted-foreground">City center is busy</p>
           </CardContent>
         </Card>
         <Card>
