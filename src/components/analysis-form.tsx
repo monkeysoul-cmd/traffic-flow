@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { analyzeTrafficData, AnalyzeTrafficDataOutput } from '@/ai/flows/analyze-traffic-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Upload } from 'lucide-react';
-import Image from 'next/image';
 import TrafficLightLoader from './traffic-light-loader';
 
 export default function AnalysisForm() {
@@ -18,6 +17,7 @@ export default function AnalysisForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalyzeTrafficDataOutput | null>(null);
   const { toast } = useToast();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -74,18 +74,18 @@ export default function AnalysisForm() {
       <Card>
         <CardHeader>
           <CardTitle>Live Traffic Analysis</CardTitle>
-          <CardDescription>Upload a traffic camera image to analyze vehicle count and congestion.</CardDescription>
+          <CardDescription>Upload a traffic camera video to analyze vehicle count and congestion.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="picture">Traffic Camera Image</Label>
-              <Input id="picture" type="file" accept="image/*" onChange={handleFileChange} />
+              <Label htmlFor="picture">Traffic Camera Video</Label>
+              <Input id="picture" type="file" accept="video/*" onChange={handleFileChange} />
             </div>
             
             {preview && (
               <div className="w-full aspect-video rounded-md overflow-hidden relative border">
-                <Image src={preview} alt="Traffic preview" fill className="object-contain" />
+                <video ref={videoRef} src={preview} controls className="w-full h-full object-contain" />
               </div>
             )}
             
@@ -135,7 +135,7 @@ export default function AnalysisForm() {
           )}
           {!isLoading && !result && (
              <div className="flex items-center justify-center h-48 text-muted-foreground">
-               <p>Upload an image and click "Analyze Traffic" to see results.</p>
+               <p>Upload a video and click "Analyze Traffic" to see results.</p>
              </div>
           )}
         </CardContent>

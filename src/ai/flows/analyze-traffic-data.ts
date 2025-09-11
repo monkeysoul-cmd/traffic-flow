@@ -15,7 +15,7 @@ const AnalyzeTrafficDataInputSchema = z.object({
   cameraFeedDataUri: z
     .string()
     .describe(
-      "A data URI of the camera feed image that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "A data URI of the camera feed video that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   location: z.string().describe('The location of the camera.'),
   timestamp: z.string().describe('The timestamp of the camera feed data.'),
@@ -52,7 +52,7 @@ const analyzeTrafficDataPrompt = ai.definePrompt({
   output: {schema: AnalyzeTrafficDataOutputSchema},
   prompt: `You are an AI that analyzes real-time traffic data from camera feeds.
 
-You will receive a camera feed image, its location, and a timestamp. Your task is to identify the number of vehicles, the level of congestion, and any potential incidents.
+You will receive a camera feed video, its location, and a timestamp. Your task is to identify the number of vehicles, the level of congestion, and any potential incidents.
 
 Location: {{{location}}}
 Timestamp: {{{timestamp}}}
