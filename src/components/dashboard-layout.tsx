@@ -1,6 +1,10 @@
+'use client';
+
+import dynamic from 'next/dynamic';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import DashboardSidebar from '@/components/dashboard/sidebar';
 import DashboardHeader from '@/components/dashboard/header';
+
+const DashboardSidebar = dynamic(() => import('@/components/dashboard/sidebar'), { ssr: false });
 
 export default function DashboardLayout({
   children,

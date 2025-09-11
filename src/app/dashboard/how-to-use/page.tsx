@@ -48,7 +48,7 @@ import {
   
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><LayoutDashboard />Dashboard Overview</CardTitle>
+            <CardTitle className="flex items-center gap-2"><><LayoutDashboard />Dashboard Overview</></CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p>The main dashboard provides a high-level overview of the current traffic situation. It is composed of several key sections:</p>
@@ -65,7 +65,7 @@ import {
         <div className="grid md:grid-cols-2 gap-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Camera />Live Camera Feeds</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><><Camera />Live Camera Feeds</></CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p>This section shows video feeds from cameras at key locations. It gives you a direct visual on the traffic conditions.</p>
@@ -76,7 +76,7 @@ import {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><TrafficCone />Live Traffic Light Control</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><><TrafficCone />Live Traffic Light Control</></CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p>For locations with active incidents, you can manually control the traffic lights. This is useful for clearing congestion or giving priority to emergency vehicles.</p>
@@ -109,7 +109,7 @@ import {
         <div className="grid md:grid-cols-2 gap-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><AlertTriangle />Recent Incidents</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><><AlertTriangle />Recent Incidents</></CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p>This table provides a summary of all recent traffic incidents detected by the system. Incidents are categorized by priority:</p>
@@ -122,7 +122,7 @@ import {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Siren />Emergency Vehicle Dispatch</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><><Siren />Emergency Vehicle Dispatch</></CardTitle>
                 </Header>
                 <CardContent>
                     <p>This tool allows you to dispatch emergency units directly to high-priority incidents.</p>
@@ -139,7 +139,7 @@ import {
         <div className="grid md:grid-cols-2 gap-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Upload />Live Traffic Analysis</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><><Upload />Live Traffic Analysis</></CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p>The "Live Analyze" page allows you to get AI-powered analysis from any traffic video feed.</p>
@@ -153,7 +153,7 @@ import {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><BarChart />Flow Graph</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><><BarChart />Flow Graph</></CardTitle>
                 </Header>
                 <CardContent>
                     <p>The "Flow Graph" page provides historical data visualizations for traffic patterns.</p>
@@ -167,7 +167,7 @@ import {
 
          <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><History />History</CardTitle>
+                <CardTitle className="flex items-center gap-2"><><History />History</></CardTitle>
             </CardHeader>
             <CardContent>
                 <p>The History page provides a complete log of all manual overrides and dispatches made through the system. You can filter the logs by date to review past actions.</p>
@@ -177,4 +177,3 @@ import {
       </div>
     );
   }
-  
