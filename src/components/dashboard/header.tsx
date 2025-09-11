@@ -42,7 +42,9 @@ export default function DashboardHeader() {
             <Link href="/dashboard/profile">Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>History</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/history">History</Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href="/">Log out</Link>
