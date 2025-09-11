@@ -21,7 +21,7 @@ export default function CameraViews({ incidents }: { incidents: Incident[] }) {
         <CardDescription>Real-time views from key traffic locations.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {incidents.map((incident, index) => (
             <div key={incident.id} className="relative aspect-[16/11.2] w-full overflow-hidden rounded-md group">
               <Image
