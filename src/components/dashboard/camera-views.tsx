@@ -1,6 +1,5 @@
-import Image from 'next/image';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Camera } from "lucide-react";
+import { Camera, Video } from "lucide-react";
 
 interface Incident {
   id: string;
@@ -22,15 +21,9 @@ export default function CameraViews({ incidents }: { incidents: Incident[] }) {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {incidents.slice(0, 4).map((incident, index) => (
-            <div key={incident.id} className="relative aspect-[16/11.2] w-full overflow-hidden rounded-md group">
-              <Image
-                src={`https://picsum.photos/seed/cam-${index + 1}/300/200`}
-                alt={`Camera view of ${incident.location}`}
-                fill
-                data-ai-hint="vehicles traffic"
-                className="w-full h-full object-cover"
-              />
+          {incidents.slice(0, 4).map((incident) => (
+            <div key={incident.id} className="relative aspect-[16/11.2] w-full overflow-hidden rounded-md group bg-muted flex items-center justify-center">
+              <Video className="w-16 h-16 text-muted-foreground" />
               <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-1">
                 <p className="text-white text-[10px] text-center truncate">{incident.location}</p>
               </div>
