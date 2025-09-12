@@ -11,6 +11,8 @@ import { Upload, MapPin, Video, Camera } from 'lucide-react';
 import TrafficLightLoader from './traffic-light-loader';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
+type Vehicle = AnalyzeTrafficDataOutput['vehicles'][0];
+
 export default function AnalysisForm() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -18,21 +20,91 @@ export default function AnalysisForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalyzeTrafficDataOutput | null>(null);
   const { toast } = useToast();
+  
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [isLive, setIsLive] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [currentVehicleCount, setCurrentVehicleCount] = useState(0);
 
   useEffect(() => {
     return () => {
-      // Stop camera stream when component unmounts
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
+
+  const drawBoundingBoxes = (vehicles: Vehicle[], video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const scaleX = canvas.width / video.videoWidth;
+    const scaleY = canvas.height / video.videoHeight;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const currentTime = video.currentTime;
+    const currentVehicles = vehicles.filter(v => currentTime >= v.timestamp && currentTime < v.timestamp + 0.5); // Show for 0.5s
+
+    setCurrentVehicleCount(currentVehicles.length);
+
+    ctx.strokeStyle = 'hsl(var(--primary))';
+    ctx.lineWidth = 2;
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = 'hsl(var(--primary))';
+
+    currentVehicles.forEach((vehicle, i) => {
+      const [x, y, w, h] = vehicle.box;
+      ctx.strokeRect(x * scaleX, y * scaleY, w * scaleX, h * scaleY);
+      ctx.fillText(`v${i + 1}`, x * scaleX, y * scaleY - 5);
+    });
+  };
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    let animationFrameId: number;
+
+    if (video && canvas && result?.vehicles) {
+      const render = () => {
+        drawBoundingBoxes(result.vehicles, video, canvas);
+        animationFrameId = requestAnimationFrame(render);
+      };
+      
+      video.onplay = () => {
+        canvas.width = video.clientWidth;
+        canvas.height = video.clientHeight;
+        render();
+      };
+      
+      video.onpause = () => {
+        cancelAnimationFrame(animationFrameId);
+      };
+      
+      video.onended = () => {
+        cancelAnimationFrame(animationFrameId);
+        const ctx = canvas.getContext('2d');
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        setCurrentVehicleCount(0);
+      };
+
+    }
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      if(video) {
+        video.onplay = null;
+        video.onpause = null;
+        video.onended = null;
+      }
+    };
+  }, [result]);
   
   const getCameraPermission = async () => {
     try {
@@ -41,6 +113,7 @@ export default function AnalysisForm() {
       setIsLive(true);
       setPreview(null);
       setFile(null);
+      setResult(null);
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
@@ -60,6 +133,7 @@ export default function AnalysisForm() {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
       setResult(null);
+      setCurrentVehicleCount(0);
       setIsLive(false);
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
@@ -88,6 +162,7 @@ export default function AnalysisForm() {
     if (videoRef.current && videoRef.current.srcObject) {
       setIsRecording(true);
       setResult(null);
+      setCurrentVehicleCount(0);
       const stream = videoRef.current.srcObject as MediaStream;
       mediaRecorderRef.current = new MediaRecorder(stream);
       const chunks: Blob[] = [];
@@ -96,7 +171,10 @@ export default function AnalysisForm() {
       };
       mediaRecorderRef.current.onstop = async () => {
         const blob = new Blob(chunks, { type: 'video/webm' });
-        await analyzeBlob(blob);
+        const dataUri = await fileToDataUri(blob);
+        setPreview(dataUri);
+        setIsLive(false); // Switch to uploaded video mode
+        await analyzeDataUri(dataUri);
       };
       mediaRecorderRef.current.start();
 
@@ -107,13 +185,13 @@ export default function AnalysisForm() {
     }
   };
 
-  const analyzeBlob = async (blob: Blob) => {
+  const analyzeDataUri = async (dataUri: string) => {
     setIsLoading(true);
     setResult(null);
+    setCurrentVehicleCount(0);
     try {
-      const cameraFeedDataUri = await fileToDataUri(blob);
       const analysisResult = await analyzeTrafficData({
-        cameraFeedDataUri,
+        cameraFeedDataUri: dataUri,
         location,
         timestamp: new Date().toISOString(),
       });
@@ -132,24 +210,8 @@ export default function AnalysisForm() {
       toast({ title: 'Please select a file.', variant: 'destructive' });
       return;
     }
-    
-    setIsLoading(true);
-    setResult(null);
-
-    try {
-      const cameraFeedDataUri = await fileToDataUri(file);
-      const analysisResult = await analyzeTrafficData({
-        cameraFeedDataUri,
-        location,
-        timestamp: new Date().toISOString(),
-      });
-      setResult(analysisResult);
-    } catch (error) {
-      console.error(error);
-      toast({ title: 'An error occurred during analysis.', description: 'Please try again.', variant: 'destructive' });
-    } finally {
-      setIsLoading(false);
-    }
+    const cameraFeedDataUri = await fileToDataUri(file);
+    await analyzeDataUri(cameraFeedDataUri);
   };
 
   return (
@@ -178,7 +240,8 @@ export default function AnalysisForm() {
 
             {(preview || isLive) && (
               <div className="w-full aspect-video rounded-md overflow-hidden relative border bg-muted">
-                <video ref={videoRef} src={preview || ''} controls={!!preview} autoPlay={isLive} muted={isLive} className="w-full h-full object-contain" />
+                <video ref={videoRef} src={preview || ''} controls={!!preview} autoPlay={isLive} muted={isLive} playsInline className="w-full h-full object-contain" />
+                <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none" />
               </div>
             )}
             
@@ -209,7 +272,7 @@ export default function AnalysisForm() {
                     {isRecording ? 'Recording...' : isLoading ? 'Analyzing...' : <><Video className="mr-2 h-4 w-4" />Capture & Analyze</>}
                 </Button>
             ) : (
-                <Button onClick={handleSubmit} disabled={isLoading || !file} className="w-full">
+                <Button onClick={handleSubmit} disabled={isLoading || (!file && !preview)} className="w-full">
                     {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
                 </Button>
             )}
@@ -231,7 +294,11 @@ export default function AnalysisForm() {
           {result && (
             <div className="space-y-4">
               <div>
-                <Label className="text-muted-foreground">Vehicle Count</Label>
+                <Label className="text-muted-foreground">Live Vehicle Count</Label>
+                <p className="text-2xl font-bold">{currentVehicleCount}</p>
+              </div>
+               <div>
+                <Label className="text-muted-foreground">Total Unique Vehicles</Label>
                 <p className="text-2xl font-bold">{result.vehicleCount}</p>
               </div>
               <div>

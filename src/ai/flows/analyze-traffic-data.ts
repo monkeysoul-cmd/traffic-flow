@@ -11,6 +11,11 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+const VehicleDetectionSchema = z.object({
+  box: z.array(z.number()).describe('The bounding box of the detected vehicle [x, y, width, height].'),
+  timestamp: z.number().describe('The timestamp in seconds when the vehicle was detected.'),
+});
+
 const AnalyzeTrafficDataInputSchema = z.object({
   cameraFeedDataUri: z
     .string()
@@ -25,7 +30,7 @@ export type AnalyzeTrafficDataInput = z.infer<typeof AnalyzeTrafficDataInputSche
 const AnalyzeTrafficDataOutputSchema = z.object({
   vehicleCount: z
     .number()
-    .describe('The number of vehicles detected in the camera feed.'),
+    .describe('The total number of unique vehicles detected in the camera feed.'),
   trafficLevel: z
     .string()
     .describe(
@@ -37,6 +42,7 @@ const AnalyzeTrafficDataOutputSchema = z.object({
     .describe(
       'Any potential incidents detected in the camera feed (e.g., accidents, road closures).'
     ),
+  vehicles: z.array(VehicleDetectionSchema).describe('A list of all detected vehicles with their bounding boxes and timestamps.'),
 });
 export type AnalyzeTrafficDataOutput = z.infer<typeof AnalyzeTrafficDataOutputSchema>;
 
@@ -52,16 +58,17 @@ const analyzeTrafficDataPrompt = ai.definePrompt({
   output: {schema: AnalyzeTrafficDataOutputSchema},
   prompt: `You are an AI that analyzes real-time traffic data from camera feeds.
 
-You will receive a camera feed video, its location, and a timestamp. Your task is to identify the number of vehicles, the level of traffic, and any potential incidents.
+You will receive a camera feed video, its location, and a timestamp. Your task is to identify the number of vehicles, the level of traffic, any potential incidents, and track each vehicle's position over time.
 
 Location: {{{location}}}
 Timestamp: {{{timestamp}}}
 Camera Feed: {{media url=cameraFeedDataUri}}
 
 Analyze the camera feed and provide the following information:
-- vehicleCount: The number of vehicles detected in the camera feed.
+- vehicleCount: The total number of unique vehicles detected in the camera feed.
 - trafficLevel: The level of traffic detected in the camera feed (e.g., low, medium, high).
 - potentialIncidents: Any potential incidents detected in the camera feed (e.g., accidents, road closures). If there are no incidents, leave this field blank.
+- vehicles: A list of all detected vehicle instances. For each instance, provide its bounding box and the timestamp (in seconds) of its appearance in the video.
 
 Ensure that the vehicle count is accurate. Base traffic level on the number of vehicles detected, with more vehicles meaning higher traffic.
 
