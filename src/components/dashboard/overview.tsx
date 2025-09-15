@@ -83,50 +83,48 @@ export default function Overview() {
         right={
           <div className="space-y-6">
             <LiveTrafficControl incidents={recentIncidents} />
-            <div className="grid lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2">
-                <CardHeader>
-                    <CardTitle>Recent Incidents</CardTitle>
-                    <CardDescription>Live feed of detected traffic incidents.</CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                    <ScrollArea className="h-72">
-                        <Table>
-                            <TableHeader>
-                            <TableRow>
-                                <TableHead className="pl-6">Status</TableHead>
-                                <TableHead>Incident ID</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Priority</TableHead>
-                                <TableHead className="pr-6">Time</TableHead>
-                            </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                            {recentIncidents.map((incident) => (
-                                <TableRow key={incident.id}>
-                                <TableCell className="pl-6">
-                                    <TrafficLight priority={incident.priority as 'High' | 'Medium' | 'Low'} />
-                                </TableCell>
-                                <TableCell className="font-mono text-xs">{incident.id}</TableCell>
-                                <TableCell className="text-xs">{incident.location}</TableCell>
-                                <TableCell className="text-xs">{incident.type}</TableCell>
-                                <TableCell>
-                                    <Badge variant={incident.priority === 'High' ? 'destructive' : incident.priority === 'Medium' ? 'secondary' : 'outline'} className="text-xs">
-                                        {incident.priority}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="pr-6 text-xs">{incident.time}</TableCell>
-                                </TableRow>
-                            ))}
-                            </TableBody>
-                        </Table>
-                    </ScrollArea>
-                </CardContent>
-                </Card>
-                <div id="emergency-dispatch">
-                    <EmergencyDispatch incidents={recentIncidents} />
-                </div>
+            <Card>
+              <CardHeader>
+                  <CardTitle>Recent Incidents</CardTitle>
+                  <CardDescription>Live feed of detected traffic incidents.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                  <ScrollArea className="h-72">
+                      <Table>
+                          <TableHeader>
+                          <TableRow>
+                              <TableHead className="pl-6">Status</TableHead>
+                              <TableHead>Incident ID</TableHead>
+                              <TableHead>Location</TableHead>
+                              <TableHead>Type</TableHead>
+                              <TableHead>Priority</TableHead>
+                              <TableHead className="pr-6">Time</TableHead>
+                          </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                          {recentIncidents.map((incident) => (
+                              <TableRow key={incident.id}>
+                              <TableCell className="pl-6">
+                                  <TrafficLight priority={incident.priority as 'High' | 'Medium' | 'Low'} />
+                              </TableCell>
+                              <TableCell className="font-mono text-xs">{incident.id}</TableCell>
+                              <TableCell className="text-xs">{incident.location}</TableCell>
+                              <TableCell className="text-xs">{incident.type}</TableCell>
+                              <TableCell>
+                                  <Badge variant={incident.priority === 'High' ? 'destructive' : incident.priority === 'Medium' ? 'secondary' : 'outline'} className="text-xs">
+                                      {incident.priority}
+                                  </Badge>
+                              </TableCell>
+                              <TableCell className="pr-6 text-xs">{incident.time}</TableCell>
+                              </TableRow>
+                          ))}
+                          </TableBody>
+                      </Table>
+                  </ScrollArea>
+              </CardContent>
+            </Card>
+            <div id="emergency-dispatch">
+                <EmergencyDispatch incidents={recentIncidents} />
             </div>
           </div>
         }
