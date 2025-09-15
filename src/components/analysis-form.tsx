@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { analyzeTrafficData, AnalyzeTrafficDataOutput } from '@/ai/flows/analyze-traffic-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Upload, MapPin, Video, Camera } from 'lucide-react';
+import { Upload, MapPin, Video, Camera, Square } from 'lucide-react';
 import TrafficLightLoader from './traffic-light-loader';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
@@ -27,14 +27,19 @@ export default function AnalysisForm() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [isLive, setIsLive] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentVehicleCount, setCurrentVehicleCount] = useState(0);
+
+  const analysisIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
+      }
+      if (analysisIntervalRef.current) {
+        clearInterval(analysisIntervalRef.current);
       }
     };
   }, []);
@@ -158,33 +163,6 @@ export default function AnalysisForm() {
     });
   };
 
-  const startRecording = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      setIsRecording(true);
-      setResult(null);
-      setCurrentVehicleCount(0);
-      const stream = videoRef.current.srcObject as MediaStream;
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      const chunks: Blob[] = [];
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        chunks.push(event.data);
-      };
-      mediaRecorderRef.current.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const dataUri = await fileToDataUri(blob);
-        setPreview(dataUri);
-        setIsLive(false); // Switch to uploaded video mode
-        await analyzeDataUri(dataUri);
-      };
-      mediaRecorderRef.current.start();
-
-      setTimeout(() => {
-        mediaRecorderRef.current?.stop();
-        setIsRecording(false);
-      }, 5000); // Record for 5 seconds
-    }
-  };
-
   const analyzeDataUri = async (dataUri: string) => {
     setIsLoading(true);
     setResult(null);
@@ -203,6 +181,44 @@ export default function AnalysisForm() {
       setIsLoading(false);
     }
   }
+  
+  const captureAndAnalyze = useCallback(async () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+      mediaRecorderRef.current.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const dataUri = await fileToDataUri(blob);
+        await analyzeDataUri(dataUri);
+      };
+      mediaRecorderRef.current.start();
+
+      setTimeout(() => {
+        mediaRecorderRef.current?.stop();
+      }, 5000); // Record for 5 seconds
+    }
+  }, [location]);
+
+  const startLiveAnalysis = () => {
+    setIsAnalyzing(true);
+    captureAndAnalyze(); // Immediate analysis
+    analysisIntervalRef.current = setInterval(captureAndAnalyze, 5000);
+  };
+  
+  const stopLiveAnalysis = () => {
+    setIsAnalyzing(false);
+    if(analysisIntervalRef.current){
+      clearInterval(analysisIntervalRef.current);
+      analysisIntervalRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,7 +231,7 @@ export default function AnalysisForm() {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-8">
+    <div className="grid md:grid-cols-1 gap-8">
       <Card>
         <CardHeader>
           <CardTitle>Live Traffic Analysis</CardTitle>
@@ -268,54 +284,49 @@ export default function AnalysisForm() {
             </div>
             
             {isLive ? (
-                <Button onClick={startRecording} disabled={isLoading || isRecording} className="w-full">
-                    {isRecording ? 'Recording...' : isLoading ? 'Analyzing...' : <><Video className="mr-2 h-4 w-4" />Capture & Analyze</>}
+              isAnalyzing ? (
+                <Button onClick={stopLiveAnalysis} variant="destructive" className="w-full">
+                  <Square className="mr-2 h-4 w-4" />Stop Analysis
                 </Button>
+              ) : (
+                <Button onClick={startLiveAnalysis} disabled={isLoading} className="w-full">
+                  <Video className="mr-2 h-4 w-4" />Start Live Analysis
+                </Button>
+              )
             ) : (
-                <Button onClick={handleSubmit} disabled={isLoading || (!file && !preview)} className="w-full">
-                    {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
-                </Button>
+              <Button onClick={handleSubmit} disabled={isLoading || (!file && !preview)} className="w-full">
+                  {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
+              </Button>
+            )}
+
+            {isLoading && (
+              <div className="flex items-center justify-center h-24">
+                <TrafficLightLoader />
+              </div>
+            )}
+            {result && (
+              <div className="space-y-4 pt-4 border-t">
+                 <h3 className="font-semibold">Latest Analysis Results</h3>
+                <div>
+                  <Label className="text-muted-foreground">Total Vehicles (in last 5s)</Label>
+                  <p className="text-2xl font-bold">{result.vehicleCount}</p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Traffic Level</Label>
+                  <p className="text-2xl font-bold capitalize">{result.trafficLevel}</p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Potential Incidents</Label>
+                  <p className="text-lg">{result.potentialIncidents || 'None detected'}</p>
+                </div>
+              </div>
+            )}
+            {!isLoading && !result && (
+               <div className="flex items-center justify-center h-24 text-muted-foreground">
+                 <p>Upload a video or use the camera to see results.</p>
+               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Analysis Results</CardTitle>
-          <CardDescription>Results from the traffic analysis will appear here.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {isLoading && (
-            <div className="flex items-center justify-center h-48">
-              <TrafficLightLoader />
-            </div>
-          )}
-          {result && (
-            <div className="space-y-4">
-              <div>
-                <Label className="text-muted-foreground">Live Vehicle Count</Label>
-                <p className="text-2xl font-bold">{currentVehicleCount}</p>
-              </div>
-               <div>
-                <Label className="text-muted-foreground">Total Unique Vehicles</Label>
-                <p className="text-2xl font-bold">{result.vehicleCount}</p>
-              </div>
-              <div>
-                <Label className="text-muted-foreground">Traffic Level</Label>
-                <p className="text-2xl font-bold capitalize">{result.trafficLevel}</p>
-              </div>
-              <div>
-                <Label className="text-muted-foreground">Potential Incidents</Label>
-                <p className="text-lg">{result.potentialIncidents || 'None detected'}</p>
-              </div>
-            </div>
-          )}
-          {!isLoading && !result && (
-             <div className="flex items-center justify-center h-48 text-muted-foreground">
-               <p>Upload a video or use the camera to see results.</p>
-             </div>
-          )}
         </CardContent>
       </Card>
     </div>
