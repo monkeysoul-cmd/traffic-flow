@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { analyzeTrafficData, AnalyzeTrafficDataOutput } from '@/ai/flows/analyze-traffic-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Upload, MapPin, Video, Camera, Square } from 'lucide-react';
+import { Upload, MapPin } from 'lucide-react';
 import TrafficLightLoader from './traffic-light-loader';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 type Vehicle = AnalyzeTrafficDataOutput['vehicles'][0];
 
@@ -23,26 +22,7 @@ export default function AnalysisForm() {
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const [isLive, setIsLive] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentVehicleCount, setCurrentVehicleCount] = useState(0);
-
-  const analysisIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-      }
-      if (analysisIntervalRef.current) {
-        clearInterval(analysisIntervalRef.current);
-      }
-    };
-  }, []);
 
   const drawBoundingBoxes = (vehicles: Vehicle[], video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d');
@@ -111,40 +91,12 @@ export default function AnalysisForm() {
     };
   }, [result]);
   
-  const getCameraPermission = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setHasCameraPermission(true);
-      setIsLive(true);
-      setPreview(null);
-      setFile(null);
-      setResult(null);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-      setHasCameraPermission(false);
-      toast({
-        variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings.',
-      });
-    }
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
       setResult(null);
       setCurrentVehicleCount(0);
-      setIsLive(false);
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-        videoRef.current.srcObject = null;
-      }
 
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -154,7 +106,7 @@ export default function AnalysisForm() {
     }
   };
   
-  const fileToDataUri = (file: File | Blob): Promise<string> => {
+  const fileToDataUri = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);
@@ -181,44 +133,6 @@ export default function AnalysisForm() {
       setIsLoading(false);
     }
   }
-  
-  const captureAndAnalyze = useCallback(async () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      const chunks: Blob[] = [];
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        chunks.push(event.data);
-      };
-      mediaRecorderRef.current.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const dataUri = await fileToDataUri(blob);
-        await analyzeDataUri(dataUri);
-      };
-      mediaRecorderRef.current.start();
-
-      setTimeout(() => {
-        mediaRecorderRef.current?.stop();
-      }, 5000); // Record for 5 seconds
-    }
-  }, [location]);
-
-  const startLiveAnalysis = () => {
-    setIsAnalyzing(true);
-    captureAndAnalyze(); // Immediate analysis
-    analysisIntervalRef.current = setInterval(captureAndAnalyze, 5000);
-  };
-  
-  const stopLiveAnalysis = () => {
-    setIsAnalyzing(false);
-    if(analysisIntervalRef.current){
-      clearInterval(analysisIntervalRef.current);
-      analysisIntervalRef.current = null;
-    }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop();
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -234,40 +148,21 @@ export default function AnalysisForm() {
     <div className="grid md:grid-cols-1 gap-8">
       <Card>
         <CardHeader>
-          <CardTitle>Live Traffic Analysis</CardTitle>
-          <CardDescription>Analyze vehicle count and traffic level from a video file or live camera.</CardDescription>
+          <CardTitle>Traffic Analysis</CardTitle>
+          <CardDescription>Analyze vehicle count and traffic level from a video file.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="picture">Upload Traffic Video</Label>
               <Input id="picture" type="file" accept="video/*" onChange={handleFileChange} />
             </div>
 
-            <div className="flex items-center gap-4">
-                <div className="flex-1 border-t"></div>
-                <span className="text-xs text-muted-foreground">OR</span>
-                <div className="flex-1 border-t"></div>
-            </div>
-            
-            <Button variant="outline" className="w-full" onClick={getCameraPermission}>
-                <Camera className="mr-2 h-4 w-4" /> Use Live Camera
-            </Button>
-
-            {(preview || isLive) && (
+            {preview && (
               <div className="w-full aspect-video rounded-md overflow-hidden relative border bg-muted">
-                <video ref={videoRef} src={preview || ''} controls={!!preview} autoPlay={isLive} muted={isLive} playsInline className="w-full h-full object-contain" />
+                <video ref={videoRef} src={preview} controls className="w-full h-full object-contain" />
                 <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none" />
               </div>
-            )}
-            
-            {hasCameraPermission === false && (
-                <Alert variant="destructive">
-                    <AlertTitle>Camera Access Required</AlertTitle>
-                    <AlertDescription>
-                        Please allow camera access in your browser to use this feature.
-                    </AlertDescription>
-                </Alert>
             )}
 
             <div className="space-y-2">
@@ -283,21 +178,9 @@ export default function AnalysisForm() {
               />
             </div>
             
-            {isLive ? (
-              isAnalyzing ? (
-                <Button onClick={stopLiveAnalysis} variant="destructive" className="w-full">
-                  <Square className="mr-2 h-4 w-4" />Stop Analysis
-                </Button>
-              ) : (
-                <Button onClick={startLiveAnalysis} disabled={isLoading} className="w-full">
-                  <Video className="mr-2 h-4 w-4" />Start Live Analysis
-                </Button>
-              )
-            ) : (
-              <Button onClick={handleSubmit} disabled={isLoading || (!file && !preview)} className="w-full">
-                  {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
-              </Button>
-            )}
+            <Button type="submit" disabled={isLoading || !file} className="w-full">
+                {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
+            </Button>
 
             {isLoading && (
               <div className="flex items-center justify-center h-24">
@@ -306,9 +189,13 @@ export default function AnalysisForm() {
             )}
             {result && (
               <div className="space-y-4 pt-4 border-t">
-                 <h3 className="font-semibold">Latest Analysis Results</h3>
+                 <h3 className="font-semibold">Analysis Results</h3>
+                 <div>
+                  <Label className="text-muted-foreground">Live Vehicle Count (in view)</Label>
+                  <p className="text-2xl font-bold">{currentVehicleCount}</p>
+                </div>
                 <div>
-                  <Label className="text-muted-foreground">Total Vehicles (in last 5s)</Label>
+                  <Label className="text-muted-foreground">Total Unique Vehicles (in video)</Label>
                   <p className="text-2xl font-bold">{result.vehicleCount}</p>
                 </div>
                 <div>
@@ -323,10 +210,10 @@ export default function AnalysisForm() {
             )}
             {!isLoading && !result && (
                <div className="flex items-center justify-center h-24 text-muted-foreground">
-                 <p>Upload a video or use the camera to see results.</p>
+                 <p>Upload a video to see results.</p>
                </div>
             )}
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>
