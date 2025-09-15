@@ -12,7 +12,7 @@ interface Incident {
 
 export default function CameraViews({ incidents }: { incidents: Incident[] }) {
   return (
-    <Card>
+    <Card className="h-fit sticky top-6">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Camera className="w-6 h-6" />
