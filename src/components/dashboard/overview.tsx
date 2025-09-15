@@ -8,7 +8,7 @@ import LiveTrafficControl from "./live-traffic-control";
 import { ScrollArea } from "../ui/scroll-area";
 import EmergencyDispatch from "./emergency-dispatch";
 import Link from "next/link";
-import AnalysisForm from "../analysis-form";
+import CameraViews from "./camera-views";
 
 const recentIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", priority: "High", time: "10:45 AM" },
@@ -79,7 +79,7 @@ export default function Overview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AnalysisForm />
+        <CameraViews incidents={recentIncidents} />
         <LiveTrafficControl incidents={recentIncidents} />
       </div>
 

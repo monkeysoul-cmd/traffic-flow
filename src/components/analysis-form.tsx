@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { analyzeTrafficData, AnalyzeTrafficDataOutput } from '@/ai/flows/analyze-traffic-data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -145,77 +144,67 @@ export default function AnalysisForm() {
   };
 
   return (
-    <div className="grid md:grid-cols-1 gap-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Traffic Analysis</CardTitle>
-          <CardDescription>Analyze vehicle count and traffic level from a video file.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <Label htmlFor="picture">Upload Traffic Video</Label>
-              <Input id="picture" type="file" accept="video/*" onChange={handleFileChange} />
-            </div>
+    <form className="space-y-6" onSubmit={handleSubmit}>
+      <div className="space-y-2">
+        <Label htmlFor="picture">Upload Traffic Video</Label>
+        <Input id="picture" type="file" accept="video/*" onChange={handleFileChange} />
+      </div>
 
-            {preview && (
-              <div className="w-full aspect-video rounded-md overflow-hidden relative border bg-muted">
-                <video ref={videoRef} src={preview} controls className="w-full h-full object-contain" />
-                <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none" />
-              </div>
-            )}
+      {preview && (
+        <div className="w-full aspect-video rounded-md overflow-hidden relative border bg-muted">
+          <video ref={videoRef} src={preview} controls className="w-full h-full object-contain" />
+          <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none" />
+        </div>
+      )}
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <Label htmlFor="location">Location</Label>
-              </div>
-              <Input 
-                id="location" 
-                value={location} 
-                onChange={(e) => setLocation(e.target.value)} 
-                placeholder="e.g., MG Road, Bangalore"
-              />
-            </div>
-            
-            <Button type="submit" disabled={isLoading || !file} className="w-full">
-                {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
-            </Button>
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <MapPin className="h-4 w-4 text-muted-foreground" />
+          <Label htmlFor="location">Location</Label>
+        </div>
+        <Input 
+          id="location" 
+          value={location} 
+          onChange={(e) => setLocation(e.target.value)} 
+          placeholder="e.g., MG Road, Bangalore"
+        />
+      </div>
+      
+      <Button type="submit" disabled={isLoading || !file} className="w-full">
+          {isLoading ? 'Analyzing...' : <><Upload className="mr-2 h-4 w-4" />Analyze Traffic</>}
+      </Button>
 
-            {isLoading && (
-              <div className="flex items-center justify-center h-24">
-                <TrafficLightLoader />
-              </div>
-            )}
-            {result && (
-              <div className="space-y-4 pt-4 border-t">
-                 <h3 className="font-semibold">Analysis Results</h3>
-                 <div>
-                  <Label className="text-muted-foreground">Live Vehicle Count (in view)</Label>
-                  <p className="text-2xl font-bold">{currentVehicleCount}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Total Unique Vehicles (in video)</Label>
-                  <p className="text-2xl font-bold">{result.vehicleCount}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Traffic Level</Label>
-                  <p className="text-2xl font-bold capitalize">{result.trafficLevel}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Potential Incidents</Label>
-                  <p className="text-lg">{result.potentialIncidents || 'None detected'}</p>
-                </div>
-              </div>
-            )}
-            {!isLoading && !result && (
-               <div className="flex items-center justify-center h-24 text-muted-foreground">
-                 <p>Upload a video to see results.</p>
-               </div>
-            )}
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+      {isLoading && (
+        <div className="flex items-center justify-center h-24">
+          <TrafficLightLoader />
+        </div>
+      )}
+      {result && (
+        <div className="space-y-4 pt-4 border-t">
+            <h3 className="font-semibold">Analysis Results</h3>
+            <div>
+            <Label className="text-muted-foreground">Live Vehicle Count (in view)</Label>
+            <p className="text-2xl font-bold">{currentVehicleCount}</p>
+          </div>
+          <div>
+            <Label className="text-muted-foreground">Total Unique Vehicles (in video)</Label>
+            <p className="text-2xl font-bold">{result.vehicleCount}</p>
+          </div>
+          <div>
+            <Label className="text-muted-foreground">Traffic Level</Label>
+            <p className="text-2xl font-bold capitalize">{result.trafficLevel}</p>
+          </div>
+          <div>
+            <Label className="text-muted-foreground">Potential Incidents</Label>
+            <p className="text-lg">{result.potentialIncidents || 'None detected'}</p>
+          </div>
+        </div>
+      )}
+      {!isLoading && !result && (
+          <div className="flex items-center justify-center h-24 text-muted-foreground">
+            <p>Upload a video to see results.</p>
+          </div>
+      )}
+    </form>
   );
 }
