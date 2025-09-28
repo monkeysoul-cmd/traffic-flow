@@ -20,7 +20,6 @@ import { ScrollArea } from '../ui/scroll-area';
 
 const highPriorityIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road: Lane 1", type: "Accident", time: "10:45 AM" },
-  { id: "INC-004", location: "Marine Drive", type: "Accident", time: "9:50 AM" },
 ];
 
 export default function DashboardHeader() {
