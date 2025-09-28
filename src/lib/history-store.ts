@@ -36,13 +36,13 @@ interface HistoryState {
 }
 
 const initialLightControlHistory: LightControlLog[] = [
-    { id: 1, location: 'MG Road & Brigade Road', user: 'bitfusion', action: 'Set to GREEN for 60s', timestamp: new Date(2024, 6, 26, 10, 46) },
+    { id: 1, location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion', action: 'Set to GREEN for 60s', timestamp: new Date(2024, 6, 26, 10, 46) },
     { id: 2, location: 'Marine Drive', user: 'bitfusion', action: 'Set to RED for 30s', timestamp: new Date(2024, 6, 26, 9, 51) },
 ];
 
 const initialDispatchHistory: DispatchLog[] = [
-    { id: 1, unit: 'police', incidentId: 'INC-001', location: 'MG Road & Brigade Road', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
-    { id: 2, unit: 'ambulance', incidentId: 'INC-001', location: 'MG Road & Brigade Road', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
+    { id: 1, unit: 'police', incidentId: 'INC-001', location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
+    { id: 2, unit: 'ambulance', incidentId: 'INC-001', location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
     { id: 3, unit: 'ambulance', incidentId: 'INC-004', location: 'Marine Drive', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 9, 50) },
 ];
 
@@ -80,4 +80,3 @@ export const useHistoryStore = create<HistoryState>()((set, get) => ({
         })).sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
     },
 }));
-
