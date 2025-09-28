@@ -224,18 +224,22 @@ const LiveTrafficControlContent = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {(isFullScreen ? incidents : incidents.slice(0, 4)).map((incident) => (
-            <TableRow key={incident.id}>
-              <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
-              <TableCell className="p-1">
-                <TrafficLightController
-                  incident={incident}
-                  controllerState={controllerStates[incident.id]}
-                  onStateChange={(newState) => onControllerStateChange(incident.id, newState)}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
+          {(isFullScreen ? incidents : incidents.slice(0, 4)).map((incident) => {
+            const controllerState = controllerStates[incident.id];
+            if (!controllerState) return null;
+            return (
+                <TableRow key={incident.id}>
+                <TableCell className="font-medium pl-4 py-1.5">{incident.location}</TableCell>
+                <TableCell className="p-1">
+                    <TrafficLightController
+                    incident={incident}
+                    controllerState={controllerState}
+                    onStateChange={(newState) => onControllerStateChange(incident.id, newState)}
+                    />
+                </TableCell>
+                </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </CardContent>
@@ -243,17 +247,26 @@ const LiveTrafficControlContent = ({
 );
 
 export default function LiveTrafficControl({ incidents }: { incidents: Incident[] }) {
-    const [controllerStates, setControllerStates] = useState<Record<string, ControllerState>>(() =>
-        incidents.reduce((acc, incident) => {
-            acc[incident.id] = {
-                lightState: 'red',
-                duration: 30,
-                remaining: 30,
-                isRunning: false,
-            };
-            return acc;
-        }, {} as Record<string, ControllerState>)
-    );
+    const [controllerStates, setControllerStates] = useState<Record<string, ControllerState>>({});
+
+    useEffect(() => {
+        setControllerStates(prevStates => {
+            const newStates = { ...prevStates };
+            let updated = false;
+            incidents.forEach(incident => {
+                if (!newStates[incident.id]) {
+                    newStates[incident.id] = {
+                        lightState: 'red',
+                        duration: 30,
+                        remaining: 30,
+                        isRunning: false,
+                    };
+                    updated = true;
+                }
+            });
+            return updated ? newStates : prevStates;
+        });
+    }, [incidents]);
 
     const handleControllerStateChange = (incidentId: string, newState: Partial<ControllerState>) => {
         setControllerStates(prev => ({
