@@ -12,7 +12,7 @@ import OverviewLayout from "@/components/dashboard/overview-layout";
 
 const recentIncidents = [
   { id: "INC-001", location: "MG Road & Brigade Road", type: "Accident", priority: "High", time: "10:45 AM" },
-  { id: "INC-002", location: "Bandra-Worli Sea Link", type: "Road Closure", priority: "Medium", time: "10:30 AM" },
+  { id: "INC-002", location: "MG Road & Brigade Road: Lane 2", type: "Road Closure", priority: "Medium", time: "10:30 AM" },
   { id: "INC-003", location: "Outer Ring Road, Marathahalli", type: "Heavy Traffic", priority: "Low", time: "10:15 AM" },
   { id: "INC-004", location: "Marine Drive", type: "Accident", priority: "High", time: "9:50 AM" },
 ];
