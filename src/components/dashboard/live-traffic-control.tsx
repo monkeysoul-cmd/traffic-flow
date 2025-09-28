@@ -69,7 +69,7 @@ const TrafficLightController = ({
             addLightControlLog({
               location: incident.location,
               action: `Set to ${lightState.toUpperCase()} for ${newRemaining}s`,
-              user: 'bitfusion',
+              user: 'bitfusion-I',
             });
         }
     }
@@ -79,7 +79,7 @@ const TrafficLightController = ({
         addLightControlLog({
             location: incident.location,
             action: 'Cycle Reset',
-            user: 'bitfusion',
+            user: 'bitfusion-I',
         });
     };
 
@@ -115,7 +115,7 @@ const TrafficLightController = ({
         addLightControlLog({
             location: incident.location,
             action: `Set to ${newLightState.toUpperCase()}`,
-            user: 'bitfusion',
+            user: 'bitfusion-I',
         });
     }
 

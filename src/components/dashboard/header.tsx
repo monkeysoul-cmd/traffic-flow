@@ -69,14 +69,14 @@ export default function DashboardHeader() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-9">
-            <span className="font-medium">bitfusion</span>
+            <span className="font-medium">bitfusion-I</span>
             <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">bitfusion</p>
+              <p className="text-sm font-medium leading-none">bitfusion-I</p>
               <p className="text-xs leading-none text-muted-foreground">
                 admin@trafficflow.com
               </p>

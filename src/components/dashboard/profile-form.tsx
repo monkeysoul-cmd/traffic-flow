@@ -19,7 +19,7 @@ export default function ProfileForm() {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [formState, setFormState] = useState({
-    fullName: 'bitfusion',
+    fullName: 'bitfusion-I',
     email: 'admin@trafficflow.com',
     governmentId: 'GOV12345',
     department: 'Traffic Police',

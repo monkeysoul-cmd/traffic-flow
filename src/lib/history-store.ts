@@ -36,12 +36,12 @@ interface HistoryState {
 }
 
 const initialLightControlHistory: LightControlLog[] = [
-    { id: 1, location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion', action: 'Set to GREEN for 60s', timestamp: new Date(2024, 6, 26, 10, 46) },
+    { id: 1, location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion-I', action: 'Set to GREEN for 60s', timestamp: new Date(2024, 6, 26, 10, 46) },
 ];
 
 const initialDispatchHistory: DispatchLog[] = [
-    { id: 1, unit: 'police', incidentId: 'INC-001', location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
-    { id: 2, unit: 'ambulance', incidentId: 'INC-001', location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion', timestamp: new Date(2024, 6, 26, 10, 45) },
+    { id: 1, unit: 'police', incidentId: 'INC-001', location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion-I', timestamp: new Date(2024, 6, 26, 10, 45) },
+    { id: 2, unit: 'ambulance', incidentId: 'INC-001', location: 'MG Road & Brigade Road: Lane 1', user: 'bitfusion-I', timestamp: new Date(2024, 6, 26, 10, 45) },
 ];
 
 export const useHistoryStore = create<HistoryState>()((set, get) => ({

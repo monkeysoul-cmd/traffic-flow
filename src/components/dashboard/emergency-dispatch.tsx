@@ -49,7 +49,7 @@ export default function EmergencyDispatch({ incidents }: { incidents: Incident[]
       unit: unitType,
       incidentId: selectedIncidentId,
       location: incident.location,
-      user: 'bitfusion',
+      user: 'bitfusion-I',
     });
 
     toast({
