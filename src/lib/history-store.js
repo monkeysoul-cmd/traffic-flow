@@ -63,6 +63,7 @@ export const useHistoryStore = create()((set, get) => ({
 
   setScanningActive: (active) => set({ isScanningActive: active }),
   updateAvgSpeed: (speed) => set({ avgSpeed: speed }),
+  setAutoPilotMode: (enabled) => set({ autoPilotMode: enabled }),
   addIncident: (incident) =>
     set(
       produce((state) => {

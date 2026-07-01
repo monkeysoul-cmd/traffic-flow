@@ -173,7 +173,8 @@ export default function AnalysisForm() {
     incrementAlerts,
     setScanningActive,
     updateAvgSpeed,
-    addIncident
+    addIncident,
+    setAutoPilotMode
   } = useHistoryStore();
 
   // State setup with preloaded 4-lane city demo video running local YOLO scanner by default
@@ -386,6 +387,7 @@ export default function AnalysisForm() {
               // Add collision details to results
               setResult(prev => ({
                 ...prev,
+                vehicleCount: trackerRef.current?.totalCount || 0,
                 potentialIncidents: "Critical Collision in Lane 1 - Automatic dispatches active",
                 trafficLevel: "High"
               }));
@@ -655,6 +657,7 @@ export default function AnalysisForm() {
       setUniqueVehicleCount(0);
       setPlan(null);
       updateAvgSpeed(0);
+      setAutoPilotMode(true); // Automatically run dynamic lights and timers!
 
       // Re-create the tracker bound to dispatches
       accidentTriggeredRef.current = false;
@@ -682,28 +685,6 @@ export default function AnalysisForm() {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="space-y-2">
-        <Label>Select Traffic Scanning Model</Label>
-        <div className="grid grid-cols-2 gap-4">
-          <Button
-            type="button"
-            variant={modelSelected === "gemini" ? "default" : "outline"}
-            onClick={() => setModelSelected("gemini")}
-            className="w-full"
-          >
-            Cloud Gemini AI (Detailed)
-          </Button>
-          <Button
-            type="button"
-            variant={modelSelected === "yolo" ? "default" : "outline"}
-            onClick={() => setModelSelected("yolo")}
-            disabled={modelLoading}
-            className="w-full flex items-center justify-center gap-2"
-          >
-            {modelLoading ? "Loading YOLO..." : "Local YOLO Scanner (Real-time)"}
-          </Button>
-        </div>
-      </div>
 
       <div className="space-y-2">
         <Label htmlFor="picture">Upload Traffic Video (Optional - Demo Video Pre-loaded)</Label>
