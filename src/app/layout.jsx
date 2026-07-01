@@ -1,5 +1,6 @@
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import Head from "next/head";
+import { Toaster } from "@/components/ui/toaster.jsx";
 
 export const metadata = {
   title: "Traffic Flow",
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/favicon.svg" />
       </head>
       <body className="font-body antialiased">
         {children}

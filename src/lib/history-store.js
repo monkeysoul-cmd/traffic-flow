@@ -31,18 +31,44 @@ const initialDispatchHistory = [
   },
 ];
 
+const initialIncidents = [
+  {
+    id: "INC-001",
+    location: "MG Road & Brigade Road: Lane 1",
+    type: "Accident",
+    priority: "High",
+    time: "10:45 AM",
+  },
+  {
+    id: "INC-002",
+    location: "MG Road & Brigade Road: Lane 2",
+    type: "Road Closure",
+    priority: "Medium",
+    time: "10:30 AM",
+  },
+];
+
 export const useHistoryStore = create()((set, get) => ({
   lightControlHistory: initialLightControlHistory,
   dispatchHistory: initialDispatchHistory,
-  totalVehiclesBase: 12453,
+  incidents: initialIncidents,
+  totalVehiclesBase: 0,
   sessionVehiclesScanned: 0,
   trafficLevel: "Medium",
   activeAlerts: 2,
   autoPilotMode: false,
   currentLiveCounts: {},
   isScanningActive: false,
+  avgSpeed: 0,
 
   setScanningActive: (active) => set({ isScanningActive: active }),
+  updateAvgSpeed: (speed) => set({ avgSpeed: speed }),
+  addIncident: (incident) =>
+    set(
+      produce((state) => {
+        state.incidents.unshift(incident);
+      }),
+    ),
 
   toggleAutoPilot: () =>
     set(

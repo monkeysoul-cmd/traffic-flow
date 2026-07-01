@@ -13,14 +13,23 @@ import { useHistoryStore } from "@/lib/history-store";
 import { supabase } from "@/lib/supabase";
 
 // Centroid Tracker class to track objects across video frames
+// Centroid Tracker class to track objects across video frames
 class CentroidTracker {
-  constructor(maxUnseen = 15, maxDistance = 80, onEmergencyDetected = null) {
+  constructor(maxUnseen = 15, maxDistance = 140, onEmergencyDetected = null) {
     this.maxUnseen = maxUnseen;
     this.maxDistance = maxDistance;
     this.nextId = 1;
-    this.objects = new Map(); // id -> { id, centroid, unseen, box, class, isEmergency, emergencyType }
+    this.objects = new Map(); // id -> { id, centroid, unseen, box, class, isEmergency, emergencyType, speed }
     this.totalCount = 0;
     this.onEmergencyDetected = onEmergencyDetected;
+    this.vehicleSpeeds = new Map(); // id -> speed
+  }
+
+  getAverageSpeed() {
+    const speeds = Array.from(this.vehicleSpeeds.values()).filter(s => s > 0);
+    if (speeds.length === 0) return 0;
+    const sum = speeds.reduce((a, b) => a + b, 0);
+    return Math.round(sum / speeds.length);
   }
 
   update(detections) {
@@ -70,10 +79,28 @@ class CentroidTracker {
       }
       const det = currentCentroids[match.detIdx];
       const obj = this.objects.get(match.objId);
+
+      const prevCentroid = obj.centroid;
+      const currentCentroid = det.centroid;
+      const dist = Math.hypot(currentCentroid[0] - prevCentroid[0], currentCentroid[1] - prevCentroid[1]);
+
+      // Pixel distance displacement converted to estimated km/h
+      const estimatedSpeed = dist * 4.5;
+      let newSpeed = obj.speed === 0 ? estimatedSpeed : (obj.speed * 0.92 + estimatedSpeed * 0.08);
+
+      if (dist < 0.2) {
+        newSpeed = Math.max(0, obj.speed - 1);
+      } else {
+        newSpeed = Math.max(30, Math.min(80, newSpeed));
+      }
+
       obj.centroid = det.centroid;
       obj.box = det.box;
       obj.unseen = 0;
       obj.class = det.class;
+      obj.speed = newSpeed;
+
+      this.vehicleSpeeds.set(match.objId, newSpeed);
 
       matchedDetIdxs.add(match.detIdx);
       matchedObjIds.add(match.objId);
@@ -111,8 +138,11 @@ class CentroidTracker {
       class: det.class,
       unseen: 0,
       isEmergency,
-      emergencyType
+      emergencyType,
+      speed: 0
     });
+
+    this.vehicleSpeeds.set(this.nextId, 0);
 
     if (isEmergency && this.onEmergencyDetected) {
       this.onEmergencyDetected({
@@ -141,13 +171,15 @@ export default function AnalysisForm() {
     updateLiveCount, 
     addDispatchLog, 
     incrementAlerts,
-    setScanningActive
+    setScanningActive,
+    updateAvgSpeed,
+    addIncident
   } = useHistoryStore();
 
   // State setup with preloaded 4-lane city demo video running local YOLO scanner by default
   const [file, setFile] = useState(true);
-  const [preview, setPreview] = useState("https://assets.mixkit.co/videos/preview/mixkit-traffic-in-a-large-city-street-flow-night-42215-large.mp4");
-  const [location, setLocation] = useState("MG Road, Bangalore");
+  const [preview, setPreview] = useState("/traffic-video.mp4");
+  const [location, setLocation] = useState("MG Road & Brigade Road: Lane 1");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [currentVehicleCount, setCurrentVehicleCount] = useState(0);
@@ -209,7 +241,7 @@ export default function AnalysisForm() {
   // Setup tracker instance with emergency dispatch callback
   useEffect(() => {
     if (modelSelected === "yolo") {
-      trackerRef.current = new CentroidTracker(15, 80, (ev) => {
+      trackerRef.current = new CentroidTracker(15, 140, (ev) => {
         toast({
           title: `🚨 Emergency Vehicle Detected!`,
           description: `Detected a local ${ev.type} at ${location}. Automatically dispatching route clearance...`,
@@ -276,7 +308,7 @@ export default function AnalysisForm() {
           canvas.width = video.clientWidth;
           canvas.height = video.clientHeight;
 
-          const predictions = await model.detect(video);
+          const predictions = await model.detect(video, 80, 0.16);
           const vehicleClasses = ["car", "truck", "bus", "motorcycle", "bicycle"];
           const vehicleDetections = predictions.filter(p => vehicleClasses.includes(p.class));
 
@@ -293,6 +325,10 @@ export default function AnalysisForm() {
             setUniqueVehicleCount(total);
             updateScannedVehicles(total);
 
+            // Update average speed in store
+            const currentAvgSpeed = trackerRef.current.getAverageSpeed();
+            updateAvgSpeed(currentAvgSpeed);
+
             // Update live vehicle counts in Zustand store for this location in quick intervals
             updateLiveCount(location, trackedObjects.length);
 
@@ -305,6 +341,18 @@ export default function AnalysisForm() {
                 title: "⚠️ AI CRITICAL ALERT: Accident Detected!",
                 description: `Collision detected on MG Road (Lane 1). Dispatching multi-vehicle response unit...`,
                 variant: "destructive"
+              });
+
+              // Add the accident to the dynamic incidents table
+              addIncident({
+                id: "INC-AUTO-CRASH",
+                location: location,
+                type: "Accident",
+                priority: "High",
+                time: new Date().toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                }),
               });
 
               // Dispatch police, ambulance, and fire truck sequentially to Supabase
@@ -347,20 +395,21 @@ export default function AnalysisForm() {
 
             trackedObjects.forEach((obj) => {
               const [x, y, w, h] = obj.box || [0, 0, 0, 0];
+              const speedText = obj.speed > 0 ? ` (${Math.round(obj.speed)} km/h)` : "";
               if (obj.isEmergency) {
                 // Red border and label for emergency vehicles
                 ctx.strokeStyle = "#ef4444";
                 ctx.fillStyle = "#ef4444";
                 ctx.lineWidth = 3;
                 ctx.strokeRect(x * scaleX, y * scaleY, w * scaleX, h * scaleY);
-                ctx.fillText(`🚨 ${obj.emergencyType.toUpperCase()} #${obj.id}`, x * scaleX, y * scaleY - 5);
+                ctx.fillText(`🚨 ${obj.emergencyType.toUpperCase()} #${obj.id}${speedText}`, x * scaleX, y * scaleY - 5);
               } else {
                 // Standard blue border for normal vehicles
                 ctx.strokeStyle = "#3b82f6";
                 ctx.fillStyle = "#3b82f6";
                 ctx.lineWidth = 2;
                 ctx.strokeRect(x * scaleX, y * scaleY, w * scaleX, h * scaleY);
-                ctx.fillText(`${obj.class.toUpperCase()} #${obj.id}`, x * scaleX, y * scaleY - 5);
+                ctx.fillText(`${obj.class.toUpperCase()} #${obj.id}${speedText}`, x * scaleX, y * scaleY - 5);
               }
             });
 
@@ -390,7 +439,7 @@ export default function AnalysisForm() {
         renderGemini();
       } else if (modelSelected === "yolo" && model) {
         if (!trackerRef.current) {
-          trackerRef.current = new CentroidTracker(15, 80, (ev) => {
+          trackerRef.current = new CentroidTracker(15, 140, (ev) => {
             toast({
               title: `🚨 Emergency Vehicle Detected!`,
               description: `Detected a local ${ev.type} at ${location}. Automatically dispatching route clearance...`,
@@ -605,10 +654,11 @@ export default function AnalysisForm() {
       setCurrentVehicleCount(0);
       setUniqueVehicleCount(0);
       setPlan(null);
+      updateAvgSpeed(0);
 
       // Re-create the tracker bound to dispatches
       accidentTriggeredRef.current = false;
-      trackerRef.current = new CentroidTracker(15, 80, (ev) => {
+      trackerRef.current = new CentroidTracker(15, 140, (ev) => {
         toast({
           title: `🚨 Emergency Vehicle Detected!`,
           description: `Detected a local ${ev.type} at ${location}. Automatically dispatching route clearance...`,
@@ -685,12 +735,15 @@ export default function AnalysisForm() {
           <MapPin className="h-4 w-4 text-muted-foreground" />
           <Label htmlFor="location">Location</Label>
         </div>
-        <Input
+        <select
           id="location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g., MG Road, Bangalore"
-        />
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          <option value="MG Road & Brigade Road: Lane 1">MG Road & Brigade Road: Lane 1</option>
+          <option value="MG Road & Brigade Road: Lane 2">MG Road & Brigade Road: Lane 2</option>
+        </select>
       </div>
 
       <Button type="submit" disabled={(modelSelected === "yolo" ? !model : isLoading) || !preview} className="w-full">
