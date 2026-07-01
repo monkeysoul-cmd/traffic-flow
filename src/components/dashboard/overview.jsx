@@ -33,22 +33,7 @@ import CameraViews from "./camera-views";
 import OverviewLayout from "./overview-layout";
 import { useHistoryStore } from "@/lib/history-store";
 
-const recentIncidents = [
-  {
-    id: "INC-001",
-    location: "MG Road & Brigade Road: Lane 1",
-    type: "Accident",
-    priority: "High",
-    time: "10:45 AM",
-  },
-  {
-    id: "INC-002",
-    location: "MG Road & Brigade Road: Lane 2",
-    type: "Road Closure",
-    priority: "Medium",
-    time: "10:30 AM",
-  },
-];
+// recentIncidents is now dynamically loaded from history store as incidents
 
 const TrafficLight = ({ priority }) => {
   return (
@@ -76,7 +61,7 @@ const TrafficLight = ({ priority }) => {
 };
 
 export default function Overview() {
-  const { totalVehiclesBase, sessionVehiclesScanned, trafficLevel, activeAlerts, updateScannedVehicles, updateLiveCount, isScanningActive } = useHistoryStore();
+  const { totalVehiclesBase, sessionVehiclesScanned, trafficLevel, activeAlerts, updateScannedVehicles, updateLiveCount, isScanningActive, avgSpeed, incidents } = useHistoryStore();
   const totalVehicles = totalVehiclesBase + sessionVehiclesScanned;
 
   // Background micro-traffic simulator to update the dashboard stats in quick intervals
@@ -127,7 +112,7 @@ export default function Overview() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">42 km/h</div>
+              <div className="text-2xl font-bold">{avgSpeed} km/h</div>
             </CardContent>
           </Card>
         </Link>
@@ -152,10 +137,10 @@ export default function Overview() {
       </div>
 
       <OverviewLayout
-        left={<CameraViews incidents={recentIncidents} />}
+        left={<CameraViews incidents={incidents} />}
         right={
           <div className="space-y-6">
-            <LiveTrafficControl incidents={recentIncidents} />
+            <LiveTrafficControl incidents={incidents} />
             <Card>
               <CardHeader>
                 <CardTitle>Recent Incidents</CardTitle>
@@ -177,7 +162,7 @@ export default function Overview() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {recentIncidents.map((incident) => (
+                      {incidents.map((incident) => (
                         <TableRow key={incident.id}>
                           <TableCell className="pl-6">
                             <TrafficLight priority={incident.priority} />
@@ -216,7 +201,7 @@ export default function Overview() {
               </CardContent>
             </Card>
             <div id="emergency-dispatch">
-              <EmergencyDispatch incidents={recentIncidents} />
+              <EmergencyDispatch incidents={incidents} />
             </div>
           </div>
         }
