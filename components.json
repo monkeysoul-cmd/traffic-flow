@@ -1,9 +1,11 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
+  "_comment1": "style: Default UI style template for components. rsc: Enable React Server Components.",
   "style": "default",
   "rsc": true,
   "tsx": true,
   "tailwind": {
+    "_comment2": "Tailwind CSS settings. config: tailwind config file path. css: global CSS file path.",
     "config": "tailwind.config.ts",
     "css": "src/app/globals.css",
     "baseColor": "neutral",
@@ -11,6 +13,7 @@
     "prefix": ""
   },
   "aliases": {
+    "_comment3": "Import aliases corresponding to the path mapping in tsconfig.json or jsconfig.json.",
     "components": "@/components",
     "utils": "@/lib/utils",
     "ui": "@/components/ui",
