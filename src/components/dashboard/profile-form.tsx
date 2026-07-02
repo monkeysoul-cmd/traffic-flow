@@ -13,46 +13,47 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { User, Edit, Save } from "lucide-react";
+import { User, Edit, Save, Award, Github } from "lucide-react";
 
 export default function ProfileForm() {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [formState, setFormState] = useState({
-    fullName: "bitfusion-I",
-    email: "admin@trafficflow.com",
-    governmentId: "GOV12345",
-    department: "Traffic Police",
-    location: "Bangalore City",
+    fullName: "Ayush",
+    role: "AI Software Engineer",
+    email: "ayush@example.com",
+    github: "github.com/ayush",
+    expertise: "Retrieval-Augmented Generation (RAG), Fullstack Next.js, Vector DBs",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
       ...formState,
       [e.target.id]: e.target.value,
     });
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Profile updated:", formState);
     toast({
       title: "Profile Updated!",
-      description: "Your information has been successfully saved.",
+      description: "Developer profile settings saved successfully.",
     });
     setIsEditing(false);
   };
 
   return (
-    <Card className="max-w-4xl mx-auto">
+    <Card className="max-w-2xl mx-auto border-border bg-card shadow-sm">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <User className="w-8 h-8" />
+            <div className="bg-emerald-500/10 p-2.5 rounded-xl text-emerald-400">
+              <User className="w-6 h-6" />
+            </div>
             <div>
-              <CardTitle className="text-2xl">User Profile</CardTitle>
+              <CardTitle className="text-xl font-bold">Developer Portfolio Profile</CardTitle>
               <CardDescription>
-                View and manage your account details.
+                Customize details displayed for recruiting showcases.
               </CardDescription>
             </div>
           </div>
@@ -60,19 +61,20 @@ export default function ProfileForm() {
             variant="outline"
             size="sm"
             onClick={() => setIsEditing(!isEditing)}
+            className="border-border"
           >
             {isEditing ? (
               "Cancel"
             ) : (
               <>
-                <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                <Edit className="mr-2 h-4 w-4" /> Edit Details
               </>
             )}
           </Button>
         </div>
       </CardHeader>
       <form onSubmit={handleUpdate}>
-        <CardContent className="space-y-6 pt-6">
+        <CardContent className="space-y-6 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
@@ -81,8 +83,21 @@ export default function ProfileForm() {
                 value={formState.fullName}
                 onChange={handleChange}
                 disabled={!isEditing}
+                className="border-border"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">Role / Position</Label>
+              <Input
+                id="role"
+                value={formState.role}
+                onChange={handleChange}
+                disabled={!isEditing}
+                className="border-border"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <Input
@@ -91,42 +106,42 @@ export default function ProfileForm() {
                 value={formState.email}
                 onChange={handleChange}
                 disabled={!isEditing}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="governmentId">Government ID</Label>
-              <Input
-                id="governmentId"
-                value={formState.governmentId}
-                onChange={handleChange}
-                disabled={!isEditing}
+                className="border-border"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="department">Department</Label>
+              <Label htmlFor="github">GitHub Profile</Label>
               <Input
-                id="department"
-                value={formState.department}
+                id="github"
+                value={formState.github}
                 onChange={handleChange}
                 disabled={!isEditing}
+                className="border-border"
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="location">Location / Jurisdiction</Label>
+            <Label htmlFor="expertise">Areas of Expertise</Label>
             <Input
-              id="location"
-              value={formState.location}
+              id="expertise"
+              value={formState.expertise}
               onChange={handleChange}
               disabled={!isEditing}
+              className="border-border"
             />
+          </div>
+
+          <div className="bg-muted/40 p-4 rounded-xl border border-border flex items-start gap-3 mt-4 text-sm text-muted-foreground">
+            <Award className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-foreground block">Resume Ready Showcase</span>
+              This profile links your contact information to the demo platform, illustrating fullstack competency to potential recruiters.
+            </div>
           </div>
         </CardContent>
         {isEditing && (
-          <CardFooter>
-            <Button type="submit">
+          <CardFooter className="border-t border-border pt-4">
+            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-white">
               <Save className="mr-2 h-4 w-4" /> Save Changes
             </Button>
           </CardFooter>

@@ -1,13 +1,17 @@
+import React from "react";
 import "./globals.css";
-import Head from "next/head";
 import { Toaster } from "@/components/ui/toaster.jsx";
 
 export const metadata = {
-  title: "Traffic Flow",
-  description: "Intelligent Traffic Management System",
+  title: "PDF Scholar RAG Engine",
+  description: "AI-powered Retrieval-Augmented Generation PDF Summarizer & Interactive Quiz Board",
 };
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="dark">
       <head>
