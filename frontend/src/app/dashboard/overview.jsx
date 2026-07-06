@@ -61,8 +61,13 @@ const TrafficLight = ({ priority }) => {
 };
 
 export default function Overview() {
-  const { totalVehiclesBase, sessionVehiclesScanned, trafficLevel, activeAlerts, updateScannedVehicles, updateLiveCount, isScanningActive, avgSpeed, incidents } = useHistoryStore();
+  const { totalVehiclesBase, sessionVehiclesScanned, trafficLevel, activeAlerts, updateScannedVehicles, updateLiveCount, isScanningActive, avgSpeed, incidents, fetchFromBackend } = useHistoryStore();
   const totalVehicles = totalVehiclesBase + sessionVehiclesScanned;
+
+  // Fetch persisted data from backend on mount
+  useEffect(() => {
+    fetchFromBackend();
+  }, [fetchFromBackend]);
 
   // Background micro-traffic simulator to update the dashboard stats in quick intervals
   useEffect(() => {
