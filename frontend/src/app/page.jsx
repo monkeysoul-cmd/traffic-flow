@@ -13,19 +13,47 @@ import {
 } from "@/components/ui/card.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { Label } from "@/components/ui/label.jsx";
-import { Car } from "lucide-react";
+import { Car, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { apiLogin } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [email, setEmail] = useState("admin@trafficflow.com");
   const [password, setPassword] = useState("password");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // In a real app, you'd have authentication logic here.
-    // For this demo, we'll just redirect to the dashboard.
-    router.push("/dashboard");
+    setIsLoading(true);
+
+    try {
+      const result = await apiLogin(email, password);
+
+      if (result?.success) {
+        toast({
+          title: "Login Successful!",
+          description: `Welcome back, ${result.user.fullName}.`,
+        });
+        router.push("/dashboard");
+      } else {
+        toast({
+          title: "Login Failed",
+          description: result?.message || "Invalid email or password.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: error.message || "Could not connect to the server.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,6 +79,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -61,12 +90,21 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
               />
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-4">
-            <Button type="submit" className="w-full">
-              <Car className="mr-2 h-4 w-4" /> Login
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging in...
+                </>
+              ) : (
+                <>
+                  <Car className="mr-2 h-4 w-4" /> Login
+                </>
+              )}
             </Button>
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}

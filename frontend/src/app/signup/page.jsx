@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiSignup } from "@/lib/api";
 
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [formState, setFormState] = useState({
     fullName: "",
     email: "",
@@ -36,15 +38,35 @@ export default function SignupPage() {
     });
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    // In a real app, you'd have signup logic here.
-    console.log("Signup details:", formState);
-    toast({
-      title: "Signup Successful!",
-      description: "Redirecting to login...",
-    });
-    setTimeout(() => router.push("/"), 2000);
+    setIsLoading(true);
+
+    try {
+      const result = await apiSignup(formState);
+
+      if (result?.success) {
+        toast({
+          title: "Signup Successful!",
+          description: `Welcome, ${result.user.fullName}! Redirecting to dashboard...`,
+        });
+        setTimeout(() => router.push("/dashboard"), 1500);
+      } else {
+        toast({
+          title: "Signup Failed",
+          description: result?.message || "Could not create account.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Signup Failed",
+        description: error.message || "Could not connect to the server.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -70,6 +92,7 @@ export default function SignupPage() {
                   required
                   onChange={handleChange}
                   value={formState.fullName}
+                  disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -81,6 +104,7 @@ export default function SignupPage() {
                   required
                   onChange={handleChange}
                   value={formState.email}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -92,6 +116,7 @@ export default function SignupPage() {
                 required
                 onChange={handleChange}
                 value={formState.password}
+                disabled={isLoading}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -103,6 +128,7 @@ export default function SignupPage() {
                   required
                   onChange={handleChange}
                   value={formState.governmentId}
+                  disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -113,6 +139,7 @@ export default function SignupPage() {
                   required
                   onChange={handleChange}
                   value={formState.department}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -124,12 +151,21 @@ export default function SignupPage() {
                 required
                 onChange={handleChange}
                 value={formState.location}
+                disabled={isLoading}
               />
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-4">
-            <Button type="submit" className="w-full">
-              <UserPlus className="mr-2 h-4 w-4" /> Sign Up
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating account...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="mr-2 h-4 w-4" /> Sign Up
+                </>
+              )}
             </Button>
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}

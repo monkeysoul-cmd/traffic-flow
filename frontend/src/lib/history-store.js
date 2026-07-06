@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import { produce } from "immer";
 import { supabase } from "./supabase";
+import {
+  apiGetDispatchLogs,
+  apiGetLightControlLogs,
+  apiGetIncidents,
+  apiSaveDispatchLog,
+  apiSaveLightControlLog,
+  apiSaveIncident,
+} from "./api";
 
 const initialLightControlHistory = [
   {
@@ -60,16 +68,24 @@ export const useHistoryStore = create()((set, get) => ({
   currentLiveCounts: {},
   isScanningActive: false,
   avgSpeed: 0,
+  backendLoaded: false,
 
   setScanningActive: (active) => set({ isScanningActive: active }),
   updateAvgSpeed: (speed) => set({ avgSpeed: speed }),
   setAutoPilotMode: (enabled) => set({ autoPilotMode: enabled }),
-  addIncident: (incident) =>
+  addIncident: (incident) => {
+    // Update local state instantly
     set(
       produce((state) => {
         state.incidents.unshift(incident);
       }),
-    ),
+    );
+
+    // Sync with backend (fire-and-forget)
+    apiSaveIncident(incident).catch((err) =>
+      console.warn("Backend incident save warning:", err.message)
+    );
+  },
 
   toggleAutoPilot: () =>
     set(
@@ -85,6 +101,53 @@ export const useHistoryStore = create()((set, get) => ({
       }),
     ),
 
+  // ── Fetch from Backend API ────────────────────────────────────────────────
+  fetchFromBackend: async () => {
+    if (get().backendLoaded) return; // Only fetch once per session
+
+    try {
+      const [dispatchRes, lightRes, incidentRes] = await Promise.allSettled([
+        apiGetDispatchLogs(),
+        apiGetLightControlLogs(),
+        apiGetIncidents(),
+      ]);
+
+      const updates = {};
+
+      if (dispatchRes.status === "fulfilled" && dispatchRes.value?.success) {
+        updates.dispatchHistory = dispatchRes.value.logs.map((d) => ({
+          id: d.id,
+          unit: d.unit,
+          incidentId: d.incidentId,
+          location: d.location,
+          user: d.user,
+          timestamp: new Date(d.timestamp),
+        }));
+      }
+
+      if (lightRes.status === "fulfilled" && lightRes.value?.success) {
+        updates.lightControlHistory = lightRes.value.logs.map((l) => ({
+          id: l.id,
+          location: l.location,
+          action: l.action,
+          user: l.user,
+          timestamp: new Date(l.timestamp),
+        }));
+      }
+
+      if (incidentRes.status === "fulfilled" && incidentRes.value?.success) {
+        updates.incidents = incidentRes.value.incidents;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        set({ ...updates, backendLoaded: true });
+      }
+    } catch (e) {
+      console.warn("Failed to fetch from backend:", e);
+    }
+  },
+
+  // ── Legacy Supabase Fetch ─────────────────────────────────────────────────
   fetchLogs: async () => {
     if (!supabase) return;
     try {
@@ -138,6 +201,15 @@ export const useHistoryStore = create()((set, get) => ({
       }),
     );
 
+    // Sync with backend (fire-and-forget)
+    apiSaveLightControlLog({
+      location: log.location,
+      action: log.action,
+      user: log.user,
+    }).catch((err) =>
+      console.warn("Backend light control save warning:", err.message)
+    );
+
     // Sync with Supabase (fire and forget with local fallback)
     if (supabase) {
       supabase
@@ -167,6 +239,16 @@ export const useHistoryStore = create()((set, get) => ({
           timestamp: new Date(),
         });
       }),
+    );
+
+    // Sync with backend (fire-and-forget)
+    apiSaveDispatchLog({
+      unit: log.unit,
+      incidentId: log.incidentId,
+      location: log.location,
+      user: log.user,
+    }).catch((err) =>
+      console.warn("Backend dispatch save warning:", err.message)
     );
 
     // Sync with Supabase (fire and forget with local fallback)
