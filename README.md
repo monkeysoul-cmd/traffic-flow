@@ -28,7 +28,7 @@ trafficflow/
 │   └── .env
 ├── frontend/                 # Next.js Dashboard & UI
 │   ├── src/
-│   │   ├── ai/               # Genkit AI flows (Gemini)
+│   │   ├── ai/               # Yolo model
 │   │   ├── app/              # Next.js App Router pages
 │   │   ├── components/       # React components
 │   │   ├── hooks/            # Custom React hooks
