@@ -95,6 +95,21 @@ trafficflow/
 
 ---
 
+## 🚀 Deployment
+
+The frontend and backend deploy separately.
+
+1. **Backend** (Express): deploy to any Node host. `backend/vercel.json` is included for Vercel. Set:
+   * `JWT_SECRET` — required, any long random string
+   * `FRONTEND_URL` — the deployed frontend origin (comma-separated for several)
+2. **Frontend** (Next.js): deploy to Vercel with **Root Directory** `frontend`. Set:
+   * `NEXT_PUBLIC_API_URL` — the deployed backend URL
+   * `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — optional
+
+See `backend/.env.example` and `frontend/.env.example`. The backend's in-memory store resets whenever the server restarts (always on serverless hosts), so accounts created through sign-up are not permanent there.
+
+---
+
 ## 🔌 Backend API Reference
 
 Base URL: `http://localhost:5000`

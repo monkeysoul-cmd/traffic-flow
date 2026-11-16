@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -12,95 +13,95 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Bell, ChevronDown } from "lucide-react";
-import { Badge } from "../ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { AlertTriangle } from "lucide-react";
-import { ScrollArea } from "../ui/scroll-area";
-
-const highPriorityIncidents = [
-  {
-    id: "INC-001",
-    location: "MG Road & Brigade Road: Lane 1",
-    type: "Accident",
-    time: "10:45 AM",
-  },
-];
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { StatusBadge, StatusDot } from "@/components/traffic/status";
+import { EmptyState } from "@/components/traffic/state-panels";
+import { useHistoryStore } from "@/lib/history-store";
+import { clearAuth, getStoredUser } from "@/lib/api";
 
 export default function DashboardHeader() {
+  const incidents = useHistoryStore((s) => s.incidents);
+  const isScanningActive = useHistoryStore((s) => s.isScanningActive);
+  const highPriorityIncidents = incidents.filter((i) => i.priority === "High");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    setUser(getStoredUser());
+  }, []);
+
+  const name = user?.fullName || "bitfusion-I";
+  const email = user?.email || "admin@trafficflow.com";
+
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:px-6">
+    <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/85 px-4 backdrop-blur sm:px-6">
       <SidebarTrigger className="md:hidden" />
-      <div className="flex-1" />
+      <div className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+        <StatusDot status={isScanningActive ? "free" : "idle"} pulse={isScanningActive} />
+        <span className="truncate text-muted-foreground">
+          {isScanningActive ? "Live scan running" : "Standby — simulated feed"}
+        </span>
+      </div>
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon" className="relative">
+          <Button variant="ghost" size="icon" className="relative" aria-label="Open alerts">
             <Bell className="h-5 w-5" />
             {highPriorityIncidents.length > 0 && (
-              <Badge
-                variant="destructive"
-                className="absolute -top-1 -right-1 h-5 w-5 justify-center p-0"
-              >
+              <span className="num absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-status-heavy px-1 text-[10px] font-semibold text-white">
                 {highPriorityIncidents.length}
-              </Badge>
+              </span>
             )}
-            <span className="sr-only">Toggle notifications</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-0" align="end">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <AlertTriangle className="w-5 h-5 text-destructive" />{" "}
-                High-Priority Alerts
-              </CardTitle>
-              <CardDescription>
-                {highPriorityIncidents.length} active high-priority incidents.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-48">
-                <div className="flex flex-col">
-                  {highPriorityIncidents.map((incident) => (
-                    <Link
-                      href="/dashboard#emergency-dispatch"
-                      key={incident.id}
-                      className="text-sm p-3 hover:bg-muted/50 rounded-md"
-                    >
-                      <div className="font-medium">{incident.location}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {incident.type} at {incident.time}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+          <div className="border-b p-4">
+            <p className="font-headline font-semibold">High-priority alerts</p>
+            <p className="text-sm text-muted-foreground">
+              {highPriorityIncidents.length} active
+            </p>
+          </div>
+          <ScrollArea className="max-h-60">
+            {highPriorityIncidents.length === 0 ? (
+              <EmptyState title="No high-priority incidents" hint="New alerts appear here as they are detected." className="py-8" />
+            ) : (
+              <div className="flex flex-col p-1">
+                {highPriorityIncidents.map((incident) => (
+                  <Link
+                    href="/dashboard#emergency-dispatch"
+                    key={incident.id}
+                    className="rounded-md p-3 text-sm transition-colors hover:bg-accent"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-medium">{incident.type}</span>
+                      <StatusBadge status="heavy">High</StatusBadge>
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {incident.location} · {incident.time}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
         </PopoverContent>
       </Popover>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-9">
-            <span className="font-medium">bitfusion-I</span>
-            <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
+          <Button variant="ghost" className="h-9 gap-2 px-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
+              {name.slice(0, 1).toUpperCase()}
+            </span>
+            <span className="hidden font-medium sm:inline">{name}</span>
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">bitfusion-I</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                admin@trafficflow.com
-              </p>
+              <p className="text-sm font-medium leading-none">{name}</p>
+              <p className="text-xs leading-none text-muted-foreground">{email}</p>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -112,7 +113,9 @@ export default function DashboardHeader() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/">Log out</Link>
+            <Link href="/" onClick={() => clearAuth()}>
+              Log out
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

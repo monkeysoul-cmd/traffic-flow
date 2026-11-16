@@ -9,7 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Siren, TrafficCone } from "lucide-react";
+import { Calendar as CalendarIcon, Siren, TrafficCone, History as HistoryIcon } from "lucide-react";
+import PageHeader from "@/components/traffic/page-header";
 import {
   Popover,
   PopoverContent,
@@ -61,49 +62,45 @@ export default function History() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">History</h1>
-        <div className="flex items-center gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-[240px] justify-start text-left font-normal",
-                  !date && "text-muted-foreground",
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          <Button onClick={() => setDate(undefined)} variant="ghost">
-            Clear
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        icon={HistoryIcon}
+        title="History"
+        description="Signal overrides and emergency dispatches, by day."
+        actions={
+          <>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn("w-[220px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+              </PopoverContent>
+            </Popover>
+            <Button onClick={() => setDate(undefined)} variant="ghost">
+              Show all dates
+            </Button>
+          </>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <TrafficCone className="w-6 h-6" />
-              Traffic Light Control Log
+              <TrafficCone className="h-5 w-5 text-primary" />
+              Traffic light control log
             </CardTitle>
             <CardDescription>
               Records of manual traffic light overrides.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3">
             <ScrollArea className="h-96">
               <Table>
                 <TableHeader>
@@ -133,7 +130,7 @@ export default function History() {
                         colSpan={4}
                         className="h-24 text-center text-muted-foreground"
                       >
-                        No light control records for this date.
+                        No signal changes recorded. Pick another date or show all dates.
                       </TableCell>
                     </TableRow>
                   )}
@@ -146,14 +143,14 @@ export default function History() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Siren className="w-6 h-6" />
-              Emergency Dispatch Log
+              <Siren className="h-5 w-5 text-status-heavy" />
+              Emergency dispatch log
             </CardTitle>
             <CardDescription>
               Records of dispatched emergency vehicles.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3">
             <ScrollArea className="h-96">
               <Table>
                 <TableHeader>
@@ -185,7 +182,7 @@ export default function History() {
                         colSpan={4}
                         className="h-24 text-center text-muted-foreground"
                       >
-                        No dispatch records for this date.
+                        No dispatches recorded. Pick another date or show all dates.
                       </TableCell>
                     </TableRow>
                   )}

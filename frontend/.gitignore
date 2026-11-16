@@ -45,3 +45,5 @@ firebase-debug.log
 firestore-debug.log
 
 // made by monkeysoul-cmd (ayush)
+# keep the documented example file
+!.env.example

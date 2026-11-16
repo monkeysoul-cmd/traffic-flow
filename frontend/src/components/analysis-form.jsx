@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, MapPin } from "lucide-react";
 import TrafficLightLoader from "./traffic-light-loader";
+import { StatusBadge, levelToStatus } from "@/components/traffic/status";
 import { useHistoryStore } from "@/lib/history-store";
 import { supabase } from "@/lib/supabase";
 
@@ -683,31 +684,35 @@ export default function AnalysisForm() {
     }
   };
 
-  return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+  const yoloReady = modelSelected === "yolo" ? !!model : true;
+  const scanning = isLoading && modelSelected === "yolo";
 
+  return (
+    <form className="space-y-5" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="picture">Upload Traffic Video (Optional - Demo Video Pre-loaded)</Label>
-        <Input
-          id="picture"
-          type="file"
-          accept="video/*"
-          onChange={handleFileChange}
-        />
+        <Label htmlFor="picture">Traffic video</Label>
+        <Input id="picture" type="file" accept="video/*" onChange={handleFileChange} />
+        <p className="text-xs text-muted-foreground">
+          Optional — a four-lane city demo video is already loaded.
+        </p>
       </div>
 
       {preview && (
-        <div className="w-full aspect-video rounded-md overflow-hidden relative border bg-muted">
-          <video
-            ref={videoRef}
-            src={preview}
-            controls
-            className="w-full h-full object-contain"
-          />
-          <canvas
-            ref={canvasRef}
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-          />
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-black">
+          <video ref={videoRef} src={preview} controls className="h-full w-full object-contain" />
+          <canvas ref={canvasRef} className="pointer-events-none absolute left-0 top-0 h-full w-full" />
+          <div className="pointer-events-none absolute left-2 top-2 flex flex-wrap gap-2">
+            {scanning && (
+              <StatusBadge status="heavy" className="bg-black/70 backdrop-blur">
+                Scanning
+              </StatusBadge>
+            )}
+            {modelSelected === "yolo" && (
+              <StatusBadge status={model ? "free" : modelLoading ? "moderate" : "idle"} className="bg-black/70 backdrop-blur">
+                {model ? "Detector ready" : modelLoading ? "Loading detector…" : "Detector not loaded"}
+              </StatusBadge>
+            )}
+          </div>
         </div>
       )}
 
@@ -727,90 +732,88 @@ export default function AnalysisForm() {
         </select>
       </div>
 
-      <Button type="submit" disabled={(modelSelected === "yolo" ? !model : isLoading) || !preview} className="w-full">
+      <Button type="submit" size="lg" disabled={(modelSelected === "yolo" ? !model : isLoading) || !preview} className="w-full">
         {isLoading ? (
-          "Analyzing / Scanning..."
+          "Scanning…"
+        ) : !yoloReady ? (
+          "Loading detector…"
         ) : (
           <>
-            <Upload className="mr-2 h-4 w-4" />
-            {modelSelected === "yolo" ? "Start YOLO Scan" : "Analyze Traffic"}
+            <Upload className="h-4 w-4" />
+            {modelSelected === "yolo" ? "Start YOLO scan" : "Analyze traffic"}
           </>
         )}
       </Button>
 
       {isLoading && modelSelected === "gemini" && (
-        <div className="flex items-center justify-center h-24">
+        <div className="flex h-24 items-center justify-center">
           <TrafficLightLoader />
         </div>
       )}
 
-      {((result) || (isLoading && modelSelected === "yolo")) && (
-        <div className="space-y-4 pt-4 border-t">
-          <h3 className="font-semibold">
-            {isLoading ? "Real-time Scan Status" : "Analysis Results"}
+      {(result || scanning) && (
+        <div className="settle space-y-4 border-t pt-5">
+          <h3 className="font-headline text-lg font-semibold">
+            {isLoading ? "Scan in progress" : "Analysis results"}
           </h3>
-          <div>
-            <Label className="text-muted-foreground">
-              Live Vehicle Count (in view)
-            </Label>
-            <p className="text-2xl font-bold">{currentVehicleCount}</p>
-          </div>
-          <div>
-            <Label className="text-muted-foreground">
-              Total Unique Vehicles (scanned)
-            </Label>
-            <p className="text-2xl font-bold">
-              {modelSelected === "yolo" ? uniqueVehicleCount : (result ? result.vehicleCount : 0)}
-            </p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border p-3">
+              <p className="text-xs text-muted-foreground">In view now</p>
+              <p className="num text-3xl font-semibold">{currentVehicleCount}</p>
+            </div>
+            <div className="rounded-lg border p-3">
+              <p className="text-xs text-muted-foreground">Unique vehicles scanned</p>
+              <p className="num text-3xl font-semibold">
+                {modelSelected === "yolo" ? uniqueVehicleCount : result ? result.vehicleCount : 0}
+              </p>
+            </div>
           </div>
 
           {result && (
             <>
-              <div>
-                <Label className="text-muted-foreground">Traffic Level</Label>
-                <p className="text-2xl font-bold capitalize text-primary">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-sm text-muted-foreground">Traffic level</span>
+                <StatusBadge status={levelToStatus(result.trafficLevel)} className="text-sm capitalize">
                   {result.trafficLevel}
-                </p>
+                </StatusBadge>
               </div>
-              <div>
-                <Label className="text-muted-foreground">Potential Incidents</Label>
-                <p className="text-lg text-red-500 font-semibold">
+              <div
+                className={
+                  result.potentialIncidents
+                    ? "rounded-lg border border-status-heavy/40 bg-status-heavy/10 p-3"
+                    : "rounded-lg border p-3"
+                }
+              >
+                <p className="text-xs text-muted-foreground">Potential incidents</p>
+                <p className={result.potentialIncidents ? "font-medium text-status-heavy" : "font-medium"}>
                   {result.potentialIncidents || "None detected"}
                 </p>
               </div>
 
-              <div className="pt-4 border-t space-y-4">
-                <Button
-                  type="button"
-                  onClick={handleGeneratePlan}
-                  disabled={isGeneratingPlan}
-                  variant="secondary"
-                  className="w-full"
-                >
-                  {isGeneratingPlan ? "Generating AI Optimization Plan..." : "Generate AI Traffic Control Plan"}
+              <div className="space-y-4 border-t pt-4">
+                <Button type="button" onClick={handleGeneratePlan} disabled={isGeneratingPlan} variant="secondary" className="w-full">
+                  {isGeneratingPlan ? "Generating plan…" : "Generate AI traffic control plan"}
                 </Button>
 
                 {plan && (
-                  <div className="bg-muted/50 border rounded-lg p-4 space-y-3 mt-4">
-                    <h4 className="font-semibold flex items-center gap-2 text-primary">
-                      <span>✨</span> AI Traffic Control Plan
-                    </h4>
+                  <div className="settle space-y-3 rounded-lg border bg-muted/40 p-4">
+                    <h4 className="font-headline font-semibold text-primary">AI traffic control plan</h4>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <Label className="text-muted-foreground text-xs">Recommended Green Light</Label>
-                        <p className="text-lg font-bold text-emerald-500">{plan.recommendedLightDuration} seconds</p>
+                        <Label className="text-xs text-muted-foreground">Recommended green light</Label>
+                        <p className="num text-xl font-semibold text-status-free">{plan.recommendedLightDuration} seconds</p>
                       </div>
                       <div>
-                        <Label className="text-muted-foreground text-xs">Dispatch Recommendation</Label>
-                        <p className="text-sm font-semibold">{plan.dispatchAction}</p>
+                        <Label className="text-xs text-muted-foreground">Dispatch recommendation</Label>
+                        <p className="text-sm font-medium">{plan.dispatchAction}</p>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground text-xs">Suggested Rerouting Strategy</Label>
+                      <Label className="text-xs text-muted-foreground">Suggested rerouting</Label>
                       <p className="text-sm">{plan.reroutingStrategy}</p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground text-xs">Rationale</Label>
+                      <Label className="text-xs text-muted-foreground">Rationale</Label>
                       <p className="text-xs text-muted-foreground">{plan.explanation}</p>
                     </div>
                   </div>
@@ -821,8 +824,8 @@ export default function AnalysisForm() {
         </div>
       )}
       {!isLoading && !result && (
-        <div className="flex items-center justify-center h-24 text-muted-foreground">
-          <p>Click "Start YOLO Scan" to scan the preloaded demo traffic video.</p>
+        <div className="flex items-center justify-center rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+          Press “Start YOLO scan” to analyze the demo video. Results appear here.
         </div>
       )}
     </form>

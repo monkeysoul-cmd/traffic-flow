@@ -44,13 +44,15 @@ export default function ProfileForm() {
   };
 
   return (
-    <Card className="max-w-4xl mx-auto">
+    <Card className="mx-auto max-w-3xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <User className="w-8 h-8" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 font-headline text-xl font-semibold text-primary">
+              {formState.fullName.slice(0, 1).toUpperCase() || <User className="h-6 w-6" />}
+            </span>
             <div>
-              <CardTitle className="text-2xl">User Profile</CardTitle>
+              <CardTitle className="text-2xl">User profile</CardTitle>
               <CardDescription>
                 View and manage your account details.
               </CardDescription>
@@ -65,7 +67,7 @@ export default function ProfileForm() {
               "Cancel"
             ) : (
               <>
-                <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                <Edit className="h-4 w-4" /> Edit profile
               </>
             )}
           </Button>
@@ -75,7 +77,7 @@ export default function ProfileForm() {
         <CardContent className="space-y-6 pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">Full name</Label>
               <Input
                 id="fullName"
                 value={formState.fullName}
@@ -84,7 +86,7 @@ export default function ProfileForm() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">Email address</Label>
               <Input
                 id="email"
                 type="email"
@@ -115,7 +117,7 @@ export default function ProfileForm() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="location">Location / Jurisdiction</Label>
+            <Label htmlFor="location">Location / jurisdiction</Label>
             <Input
               id="location"
               value={formState.location}
@@ -127,7 +129,7 @@ export default function ProfileForm() {
         {isEditing && (
           <CardFooter>
             <Button type="submit">
-              <Save className="mr-2 h-4 w-4" /> Save Changes
+              <Save className="h-4 w-4" /> Save changes
             </Button>
           </CardFooter>
         )}

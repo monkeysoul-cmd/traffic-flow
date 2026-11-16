@@ -10,14 +10,14 @@ import AnalysisForm from "../analysis-form";
 
 export default function CameraViews({ incidents }) {
   return (
-    <Card className="h-fit sticky top-6">
+    <Card className="h-fit lg:sticky lg:top-20">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Camera className="w-6 h-6" />
-          Camera Views & Analysis
+          <Camera className="h-5 w-5 text-primary" />
+          Camera views and analysis
         </CardTitle>
         <CardDescription>
-          Upload a video to analyze traffic patterns in real-time.
+          Scan the demo feed or upload a video to count vehicles and spot incidents.
         </CardDescription>
       </CardHeader>
       <CardContent>

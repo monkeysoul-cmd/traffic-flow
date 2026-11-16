@@ -4,58 +4,90 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 98%;
+    --foreground: 210 20% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 20% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 210 40% 9.8%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 210 40% 9.8%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-    --chart-1: 142.1 76.2% 36.3%;
-    --chart-2: 17 100% 73.5%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --popover-foreground: 210 20% 10%;
+    --primary: 206 85% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 16% 94%;
+    --secondary-foreground: 210 20% 14%;
+    --muted: 210 16% 94%;
+    --muted-foreground: 210 9% 40%;
+    --accent: 210 16% 92%;
+    --accent-foreground: 210 20% 12%;
+    --destructive: 2 74% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 14% 86%;
+    --input: 210 14% 86%;
+    --ring: 206 85% 42%;
+    --radius: 0.625rem;
+
+    /* Traffic status — used only to communicate traffic severity */
+    --status-free: 152 60% 34%;
+    --status-moderate: 38 92% 42%;
+    --status-heavy: 2 74% 50%;
+    --status-idle: 210 9% 50%;
+
+    --chart-1: 206 85% 42%;
+    --chart-2: 38 92% 42%;
+    --chart-3: 152 60% 34%;
+    --chart-4: 2 74% 50%;
+    --chart-5: 210 9% 50%;
+
+    --sidebar-background: 210 16% 96%;
+    --sidebar-foreground: 210 14% 28%;
+    --sidebar-primary: 206 85% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 16% 90%;
+    --sidebar-accent-foreground: 210 20% 10%;
+    --sidebar-border: 210 14% 86%;
+    --sidebar-ring: 206 85% 42%;
   }
 
+  /* Control-room default: asphalt greys, lane-paint white text */
   .dark {
-    --background: 150 25% 6%;
-    --foreground: 150 10% 95%;
-    --card: 150 20% 10%;
-    --card-foreground: 150 10% 95%;
-    --popover: 150 20% 10%;
-    --popover-foreground: 150 10% 95%;
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 142.1 76.2% 96.3%;
-    --secondary: 150 15% 15%;
-    --secondary-foreground: 150 10% 95%;
-    --muted: 150 15% 15%;
-    --muted-foreground: 150 10% 60%;
-    --accent: 150 15% 15%;
-    --accent-foreground: 150 10% 95%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 150 15% 15%;
-    --input: 150 15% 15%;
-    --ring: 142.1 76.2% 36.3%;
-    --chart-1: 142.1 76.2% 36.3%;
-    --chart-2: 17 100% 73.5%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --background: 210 14% 7%;
+    --foreground: 42 20% 93%;
+    --card: 210 12% 10%;
+    --card-foreground: 42 20% 93%;
+    --popover: 210 12% 11%;
+    --popover-foreground: 42 20% 93%;
+    --primary: 206 86% 58%;
+    --primary-foreground: 210 30% 8%;
+    --secondary: 210 10% 15%;
+    --secondary-foreground: 42 20% 93%;
+    --muted: 210 10% 14%;
+    --muted-foreground: 210 8% 62%;
+    --accent: 210 10% 17%;
+    --accent-foreground: 42 20% 95%;
+    --destructive: 2 78% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 9% 19%;
+    --input: 210 9% 22%;
+    --ring: 206 86% 58%;
+
+    --status-free: 152 62% 48%;
+    --status-moderate: 40 94% 56%;
+    --status-heavy: 3 82% 62%;
+    --status-idle: 210 8% 52%;
+
+    --chart-1: 206 86% 58%;
+    --chart-2: 40 94% 56%;
+    --chart-3: 152 62% 48%;
+    --chart-4: 3 82% 62%;
+    --chart-5: 210 8% 52%;
+
+    --sidebar-background: 210 14% 8%;
+    --sidebar-foreground: 210 8% 70%;
+    --sidebar-primary: 206 86% 58%;
+    --sidebar-primary-foreground: 210 30% 8%;
+    --sidebar-accent: 210 10% 15%;
+    --sidebar-accent-foreground: 42 20% 95%;
+    --sidebar-border: 210 9% 17%;
+    --sidebar-ring: 206 86% 58%;
   }
 }
 
@@ -63,8 +95,66 @@
   * {
     @apply border-border;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "tnum" 1, "cv11" 1;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-headline;
+    letter-spacing: -0.005em;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Painted dashed centre line — the one recurring road motif */
+  .lane-divider {
+    height: 2px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      hsl(var(--foreground) / 0.22) 0 14px,
+      transparent 14px 26px
+    );
+  }
+  .lane-divider-v {
+    width: 2px;
+    background-image: repeating-linear-gradient(
+      180deg,
+      hsl(var(--foreground) / 0.22) 0 14px,
+      transparent 14px 26px
+    );
+  }
+  /* Kerb edge on the leading side of a card, coloured by severity */
+  .kerb {
+    position: relative;
+  }
+  .kerb::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+    background: var(--kerb-color, hsl(var(--border)));
+  }
+  .num {
+    font-family: "Barlow Semi Condensed", Barlow, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .road-surface {
+    background-color: hsl(var(--background));
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.025) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 }
 
@@ -72,19 +162,19 @@
   @keyframes light-up {
     0%,
     100% {
-      background-color: #4b5563; /* gray-600 */
+      background-color: #4b5563;
       box-shadow: none;
     }
     33% {
-      background-color: #ef4444; /* red-500 */
+      background-color: #ef4444;
       box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
     }
     66% {
-      background-color: #f59e0b; /* amber-500 */
+      background-color: #f59e0b;
       box-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b;
     }
     99% {
-      background-color: #22c55e; /* green-500 */
+      background-color: #22c55e;
       box-shadow: 0 0 10px #22c55e, 0 0 20px #22c55e;
     }
   }
@@ -101,14 +191,90 @@
   .traffic-light-loader .light:nth-child(3) {
     animation-delay: 2s;
   }
-  
+
+  /* Vehicles travelling along a road path (auth backdrop + junction map) */
+  @keyframes drive {
+    from {
+      offset-distance: 0%;
+    }
+    to {
+      offset-distance: 100%;
+    }
+  }
+  .vehicle {
+    offset-rotate: auto;
+    animation: drive var(--drive-time, 14s) linear infinite;
+    animation-delay: var(--drive-delay, 0s);
+  }
+
+  @keyframes live-pulse {
+    0% {
+      box-shadow: 0 0 0 0 hsl(var(--pulse-color, var(--status-free)) / 0.55);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 7px hsl(var(--pulse-color, var(--status-free)) / 0);
+    }
+  }
+  .live-dot {
+    animation: live-pulse 2s ease-out infinite;
+  }
+
+  @keyframes dash-run {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+  .road-dash {
+    animation: dash-run 1.4s linear infinite;
+  }
+
+  @keyframes lane-flow {
+    to {
+      background-position: 26px 0;
+    }
+  }
+  .lane-flow {
+    background-image: repeating-linear-gradient(
+      90deg,
+      hsl(var(--foreground) / 0.3) 0 14px,
+      transparent 14px 26px
+    );
+    animation: lane-flow 1.2s linear infinite;
+  }
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .settle {
+    animation: settle 0.35s ease-out both;
+  }
+
   /* Hide number input arrows */
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  input[type=number] {
+  input[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vehicle,
+    .live-dot,
+    .lane-flow,
+    .road-dash,
+    .settle,
+    .traffic-light-loader .light {
+      animation: none !important;
+    }
   }
 }

@@ -9,11 +9,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
-        code: ['monospace'],
+        body: ['Barlow', 'system-ui', 'sans-serif'],
+        headline: ['"Barlow Semi Condensed"', 'Barlow', 'system-ui', 'sans-serif'],
+        code: ['ui-monospace', 'monospace'],
       },
       colors: {
+        status: {
+          free: 'hsl(var(--status-free))',
+          moderate: 'hsl(var(--status-moderate))',
+          heavy: 'hsl(var(--status-heavy))',
+          idle: 'hsl(var(--status-idle))',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

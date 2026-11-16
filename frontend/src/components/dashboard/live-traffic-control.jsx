@@ -9,14 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { EmptyState } from "@/components/traffic/state-panels";
 import { cn } from "@/lib/utils";
 import {
   TrafficCone,
@@ -124,92 +117,72 @@ const TrafficLightController = ({
     });
   };
 
+  const lamps = [
+    { key: "red", label: "Red", on: "bg-red-500 shadow-[0_0_12px_2px_rgba(239,68,68,0.55)]" },
+    { key: "yellow", label: "Yellow", on: "bg-amber-400 shadow-[0_0_12px_2px_rgba(251,191,36,0.55)]" },
+    { key: "green", label: "Green", on: "bg-emerald-500 shadow-[0_0_12px_2px_rgba(16,185,129,0.55)]" },
+  ];
+
   return (
-    <div className="flex items-center justify-center space-x-1">
-      <div className="flex flex-col items-center gap-2 mr-4">
-        <div className="flex bg-gray-800 border-2 border-gray-900 rounded-full p-1 space-x-1">
-          <button
-            onClick={() => handleLightStateChange("red")}
-            className={cn(
-              "w-6 h-6 rounded-full transition-all",
-              lightState === "red"
-                ? "bg-red-500 shadow-[0_0_10px_#ef4444]"
-                : "bg-gray-600",
-            )}
-          />
-
-          <button
-            onClick={() => handleLightStateChange("yellow")}
-            className={cn(
-              "w-6 h-6 rounded-full transition-all",
-              lightState === "yellow"
-                ? "bg-yellow-500 shadow-[0_0_10px_#f59e0b]"
-                : "bg-gray-600",
-            )}
-          />
-
-          <button
-            onClick={() => handleLightStateChange("green")}
-            className={cn(
-              "w-6 h-6 rounded-full transition-all",
-              lightState === "green"
-                ? "bg-green-500 shadow-[0_0_10px_#22c55e]"
-                : "bg-gray-600",
-            )}
-          />
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+      <div className="flex items-center gap-3">
+        <div
+          role="radiogroup"
+          aria-label={`Signal state at ${incident.location}`}
+          className="flex gap-1.5 rounded-full border bg-black/40 p-1.5"
+        >
+          {lamps.map((l) => (
+            <button
+              key={l.key}
+              type="button"
+              role="radio"
+              aria-checked={lightState === l.key}
+              aria-label={`Set ${l.label}`}
+              onClick={() => handleLightStateChange(l.key)}
+              className={cn(
+                "h-6 w-6 rounded-full transition-all duration-200 hover:scale-110",
+                lightState === l.key ? l.on : "bg-white/10 hover:bg-white/20",
+              )}
+            />
+          ))}
         </div>
-        <span className="text-xs text-muted-foreground capitalize">
-          {lightState}
-        </span>
+        <span className="w-12 text-sm font-medium capitalize">{lightState}</span>
       </div>
-      <div className="flex flex-col items-center space-y-1">
-        <div className="relative w-16">
+
+      <div className="flex items-center gap-2">
+        <div className="relative w-20">
           <Input
             type="number"
             value={duration}
             onChange={handleDurationChange}
-            className="w-full h-7 text-center text-sm pr-4"
+            aria-label="Green time in seconds"
+            className="h-9 pr-6 text-center"
           />
-
-          <span className="absolute right-1 top-1/2 -translate-y-1/2 text-xs font-mono text-muted-foreground">
+          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
             s
           </span>
         </div>
-        <Button
-          size="sm"
-          onClick={handleStart}
-          className="h-7 px-2 text-xs w-16 bg-blue-600/50 hover:bg-blue-700/50 text-white"
-        >
+        <Button size="sm" onClick={handleStart} disabled={isRunning} className="w-20">
           {isRunning ? "Running" : "Start"}
         </Button>
       </div>
-      <div className="flex items-center space-x-1 min-w-[32px] p-3">
-        <Timer className="w-4 h-4 text-muted-foreground" />
-        <span className="text-sm font-mono font-bold">{remaining}</span>
-      </div>
-      <div className="flex flex-col space-y-2 p-1">
-        <Button
-          size="icon"
-          onClick={handleAdd10s}
-          className="h-5 w-5 bg-sky-500/50 hover:bg-sky-600/50 text-white"
+
+      <div className="flex items-center gap-2">
+        <span
+          className="flex min-w-[64px] items-center gap-1.5 rounded-md border px-2 py-1"
+          aria-live="off"
         >
-          <Plus className="w-3 h-3" />
+          <Timer className={cn("h-4 w-4", isRunning ? "text-primary" : "text-muted-foreground")} />
+          <span className="num text-base font-semibold">{remaining}s</span>
+        </span>
+        <Button size="icon" variant="outline" onClick={handleAdd10s} aria-label="Add 10 seconds" className="h-8 w-8">
+          <Plus className="h-3.5 w-3.5" />
         </Button>
-        <Button
-          size="icon"
-          onClick={handleSubtract5s}
-          className="h-5 w-5 bg-red-400/50 hover:bg-red-500/50 text-white"
-        >
-          <Minus className="w-3 h-3" />
+        <Button size="icon" variant="outline" onClick={handleSubtract5s} aria-label="Subtract 5 seconds" className="h-8 w-8">
+          <Minus className="h-3.5 w-3.5" />
         </Button>
-      </div>
-      <div className="flex flex-col justify-center pl-1 p-1">
-        <Button
-          size="icon"
-          onClick={handleReset}
-          className="h-5 w-5 bg-green-500/50 hover:bg-green-600/50 text-white"
-        >
-          <RotateCcw className="w-3 h-3" />
+        <Button size="icon" variant="outline" onClick={handleReset} aria-label="Reset cycle" className="h-8 w-8">
+          <RotateCcw className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>
@@ -225,92 +198,79 @@ const LiveTrafficControlContent = ({
   onToggleAutoPilot,
 }) => (
   <>
-    <CardHeader className="flex flex-row items-center justify-between p-4">
+    <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <CardTitle className="flex items-center gap-2">
-          <TrafficCone className="w-6 h-6" />
-          Live Traffic Light Control
+          <TrafficCone className="h-5 w-5 text-primary" />
+          Live traffic light control
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="mt-1">
           {autoPilotMode
-            ? "🤖 AI Auto-Pilot is managing lanes based on YOLO video data."
+            ? "AI auto-pilot is managing lanes based on YOLO video data."
             : "Manually override traffic signals for active incident locations."}
         </CardDescription>
       </div>
-      <div className="flex items-center gap-4">
-        {/* Toggle Auto Pilot Switch */}
+      <div className="flex items-center gap-2">
         <Button
           type="button"
           variant={autoPilotMode ? "default" : "outline"}
           size="sm"
           onClick={onToggleAutoPilot}
-          className={cn(
-            "flex items-center gap-1.5 font-semibold text-xs transition-all",
-            autoPilotMode 
-              ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20" 
-              : "hover:bg-muted"
-          )}
+          aria-pressed={autoPilotMode}
+          className="gap-2"
         >
-          <span>🤖 AI Auto-Pilot: {autoPilotMode ? "ON" : "OFF"}</span>
+          <span
+            aria-hidden="true"
+            className={cn("h-2 w-2 rounded-full", autoPilotMode ? "bg-status-free live-dot" : "bg-status-idle")}
+          />
+          Auto-pilot {autoPilotMode ? "on" : "off"}
         </Button>
         {!isFullScreen && (
           <DialogTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Maximize className="w-5 h-5" />
+            <Button variant="ghost" size="icon" aria-label="Expand signal control">
+              <Maximize className="h-4 w-4" />
             </Button>
           </DialogTrigger>
         )}
         {isFullScreen && (
           <DialogClose asChild>
-            <Button variant="ghost" size="icon">
-              <Minimize className="w-5 h-5" />
+            <Button variant="ghost" size="icon" aria-label="Collapse signal control">
+              <Minimize className="h-4 w-4" />
             </Button>
           </DialogClose>
         )}
       </div>
     </CardHeader>
     <CardContent className="p-0">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="pl-4">Location</TableHead>
-            <TableHead className="text-center px-1 min-w-[280px]">
-              Signal Control
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {(isFullScreen ? incidents : incidents.slice(0, 4)).map(
-            (incident) => {
-              const controllerState = controllerStates[incident.id];
-              if (!controllerState) return null;
-              return (
-                <TableRow key={incident.id}>
-                  <TableCell className="font-medium pl-4 py-1.5">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">{incident.location}</span>
-                      {autoPilotMode && (
-                        <span className="text-[10px] text-emerald-500 font-mono">
-                          Auto-Controlled
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="p-1">
-                    <TrafficLightController
-                      incident={incident}
-                      controllerState={controllerState}
-                      onStateChange={(newState) =>
-                        onControllerStateChange(incident.id, newState)
-                      }
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            },
-          )}
-        </TableBody>
-      </Table>
+      {incidents.length === 0 ? (
+        <EmptyState
+          title="No signals to control"
+          hint="Signals appear here once an incident is reported at a location."
+        />
+      ) : (
+        <ul className="divide-y border-t">
+          {(isFullScreen ? incidents : incidents.slice(0, 4)).map((incident) => {
+            const controllerState = controllerStates[incident.id];
+            if (!controllerState) return null;
+            return (
+              <li key={incident.id} className="space-y-3 px-5 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-sm font-medium">{incident.location}</span>
+                  <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {autoPilotMode && <span className="text-status-free">Auto-controlled</span>}
+                    <span className="num">{incident.id}</span>
+                  </span>
+                </div>
+                <TrafficLightController
+                  incident={incident}
+                  controllerState={controllerState}
+                  onStateChange={(newState) => onControllerStateChange(incident.id, newState)}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </CardContent>
   </>
 );

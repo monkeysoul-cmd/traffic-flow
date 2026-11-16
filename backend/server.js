@@ -14,9 +14,20 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ── Middleware ─────────────────────────────────────────────────────────────────
+// Local dev origins, plus any deployed frontend listed in FRONTEND_URL
+// (comma-separated, e.g. "https://my-app.vercel.app").
+const allowedOrigins = [
+  "http://localhost:9002",
+  "http://localhost:3000",
+  "http://127.0.0.1:9002",
+  ...(process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((o) => o.trim().replace(/\/$/, ""))
+    .filter(Boolean),
+];
 app.use(
   cors({
-    origin: ["http://localhost:9002", "http://localhost:3000", "http://127.0.0.1:9002"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -65,7 +76,8 @@ app.use((err, req, res, next) => {
 });
 
 // ── Start Server ──────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
+// Serverless hosts (e.g. Vercel) import the app instead of running this file.
+if (require.main === module) app.listen(PORT, () => {
   console.log(`
   ╔══════════════════════════════════════════════════════╗
   ║   🚦 TrafficFlow Backend API Server                 ║

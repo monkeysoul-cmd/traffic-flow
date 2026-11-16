@@ -1,31 +1,17 @@
 "use client";
 
-import { Line, LineChart, XAxis, YAxis, CartesianGrid } from "recharts";
+import { Line, LineChart, XAxis, YAxis, CartesianGrid, ReferenceLine } from "recharts";
+import { speedData } from "@/lib/flow-data";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { hour: "00:00", speed: 45 },
-  { hour: "02:00", speed: 50 },
-  { hour: "04:00", speed: 55 },
-  { hour: "06:00", speed: 40 },
-  { hour: "08:00", speed: 30 },
-  { hour: "10:00", speed: 35 },
-  { hour: "12:00", speed: 32 },
-  { hour: "14:00", speed: 38 },
-  { hour: "16:00", speed: 28 },
-  { hour: "18:00", speed: 25 },
-  { hour: "20:00", speed: 40 },
-  { hour: "22:00", speed: 48 },
-];
-
 const chartConfig = {
   speed: {
     label: "Avg. Speed",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-1))",
   },
 };
 
@@ -35,8 +21,8 @@ export default function AverageSpeedChart() {
       config={chartConfig}
       className="min-h-[200px] w-full h-full"
     >
-      <LineChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
+      <LineChart accessibilityLayer data={speedData}>
+        <CartesianGrid vertical={false} strokeOpacity={0.4} />
         <XAxis
           dataKey="hour"
           tickLine={false}
@@ -59,6 +45,7 @@ export default function AverageSpeedChart() {
           content={<ChartTooltipContent indicator="line" />}
         />
 
+        <ReferenceLine y={30} stroke="hsl(var(--status-heavy))" strokeDasharray="6 6" label={{ value: "Congested below 30", position: "insideBottomRight", fill: "hsl(var(--status-heavy))", fontSize: 11 }} />
         <Line
           dataKey="speed"
           type="monotone"

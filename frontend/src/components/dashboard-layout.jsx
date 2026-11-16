@@ -13,9 +13,9 @@ export default function DashboardLayout({ children }) {
   return (
     <SidebarProvider>
       <DashboardSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-w-0 overflow-x-clip">
         <DashboardHeader />
-        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="mx-auto w-full max-w-[1500px] p-4 sm:p-6 lg:p-8">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

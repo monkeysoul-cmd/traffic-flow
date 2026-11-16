@@ -3,17 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button.jsx";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { Label } from "@/components/ui/label.jsx";
-import { Car, Loader2 } from "lucide-react";
+import { LogIn, Loader2 } from "lucide-react";
+import AuthShell from "@/components/traffic/auth-shell";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { apiLogin } from "@/lib/api";
@@ -57,64 +50,63 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <h1 className="text-4xl font-bold font-headline">Traffic Flow</h1>
-          </div>
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
-          <CardDescription>
-            Enter your credentials to access the dashboard.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging in...
-                </>
-              ) : (
-                <>
-                  <Car className="mr-2 h-4 w-4" /> Login
-                </>
-              )}
-            </Button>
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <Link href="/signup" className="text-primary hover:underline">
-                Sign Up
-              </Link>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+    <AuthShell>
+      <div className="space-y-2">
+        <h1 className="font-headline text-3xl font-semibold">Sign in</h1>
+        <p className="text-sm text-muted-foreground">
+          Use your traffic department account to open the control center.
+        </p>
+      </div>
+      <form onSubmit={handleLogin} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="name@domain.gov"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={isLoading}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
+          />
+        </div>
+        <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Signing in…
+            </>
+          ) : (
+            <>
+              <LogIn className="h-4 w-4" /> Sign in
+            </>
+          )}
+        </Button>
+      </form>
+      <div className="lane-divider" aria-hidden="true" />
+      <div className="space-y-2 text-sm text-muted-foreground">
+        <p>
+          Demo account is pre-filled: <span className="text-foreground">admin@trafficflow.com</span>
+        </p>
+        <p>
+          New to the system?{" "}
+          <Link href="/signup" className="font-medium text-primary hover:underline">
+            Create an account
+          </Link>
+        </p>
+      </div>
+    </AuthShell>
   );
 }

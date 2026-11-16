@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "../ui/badge";
+import { EmptyState } from "@/components/traffic/state-panels";
 import { useHistoryStore } from "@/lib/history-store";
 
 const unitIcons = {
@@ -77,8 +78,8 @@ export default function EmergencyDispatch({ incidents }) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Siren className="w-6 h-6" />
-          Emergency Vehicle Dispatch
+          <Siren className="h-5 w-5 text-status-heavy" />
+          Emergency vehicle dispatch
         </CardTitle>
         <CardDescription>
           Dispatch units to high-priority incidents.
@@ -87,14 +88,14 @@ export default function EmergencyDispatch({ incidents }) {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">
-            Select High-Priority Incident
+            High-priority incident
           </label>
           <Select
             onValueChange={setSelectedIncidentId}
             value={selectedIncidentId || ""}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select an incident..." />
+              <SelectValue placeholder={highPriorityIncidents.length ? "Select an incident…" : "No high-priority incidents"} />
             </SelectTrigger>
             <SelectContent>
               {highPriorityIncidents.map((incident) => (
@@ -106,7 +107,7 @@ export default function EmergencyDispatch({ incidents }) {
           </Select>
         </div>
 
-        <div className="flex items-end gap-2">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="flex-grow space-y-2">
             <label htmlFor="unit-type" className="text-sm font-medium">
               Unit Type
@@ -135,13 +136,13 @@ export default function EmergencyDispatch({ incidents }) {
             </Select>
           </div>
           <Button onClick={handleDispatch} disabled={!selectedIncidentId}>
-            Dispatch <ChevronsRight className="h-4 w-4 ml-2" />
+            Dispatch unit <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
 
         <div className="space-y-2 pt-2">
-          <h4 className="font-medium">All Dispatched Units</h4>
-          <ScrollArea className="h-32 rounded-md border p-2">
+          <h4 className="font-headline font-semibold">Dispatched units</h4>
+          <ScrollArea className="h-40 rounded-lg border p-2">
             {dispatchedUnits.length > 0 ? (
               dispatchedUnits.map((dispatch) => (
                 <div
@@ -169,9 +170,7 @@ export default function EmergencyDispatch({ incidents }) {
                 </div>
               ))
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                No units dispatched yet.
-              </p>
+              <EmptyState icon={Siren} title="No units dispatched yet" hint="Dispatched police, ambulance and fire units are listed here." className="py-6" />
             )}
           </ScrollArea>
         </div>
